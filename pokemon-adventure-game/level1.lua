@@ -15,40 +15,70 @@ local scene = composer.newScene()
 function scene:create( event )
  
    local sceneGroup = self.view
- 
+
+   physics.start()
+   physics.setGravity(0,0)
+   
    -- Initialize the scene here.
    -- Example: add display objects to "sceneGroup", add touch listeners, etc.
-   local titleText = display.newText("Pokemon Adventure Game", display.contentCenterX, display.contentCenterY / 2, native.systemFont, 30)
-   local background = display.newImage("mainmenu_background.png", display.contentCenterX, display.contentCenterY)
+   local levelText = display.newText("Level 1", display.contentCenterX, display.contentCenterY / 2, native.systemFont, 30)
 
-   local function playButtonPressed(event)
-      if (event.phase == "ended") then
-         composer.gotoScene("level1")
-      end
+   local world = display.newGroup()
+
+   local background = display.newImage("example_background.png", display.contentCenterX, display.contentCenterY)
+   background.xScale = 0.4
+   background.yScale = 0.4
+
+   local myCharacter = display.newCircle(display.contentCenterX, display.contentCenterY, 25)
+   physics.addBody(myCharacter, { density=0, friction=0.5, bounce=0.3 })
+
+   local enemy = display.newCircle(display.contentCenterX + 100, display.contentCenterY, 25)
+   enemy:setFillColor(1,0,0)
+   physics.addBody(enemy, { density=500, friction=0.5, bounce=0.3 })
+
+   local function onGlobalCollision( event )
+       if ( event.phase == "began" ) then
+            print("hit")
+       elseif ( event.phase == "ended" ) then
+            print("no longer hit")
+       end
+    end
+
+   local function movePlayer(event)
+        if (event.phase == "began" or event.phase == "moved") then
+            transition.to(background, {x=event.x, y=event.y, time = 2000})
+            transition.to(enemy, {x=event.x, y=event.y, time = 2000})
+        elseif (event.phase == "ended") then
+            transition.cancel(background)
+            transition.cancel(enemy)
+        end
    end
 
-   -- Create the play button
-   local playButton = widget.newButton(
-      {
-      left = display.contentCenterX - 75,
-      top = display.contentCenterY,
-      id = "playButton",
-      label = "Play",
-      labelColor = { default={0,0,0,1} },
-      onEvent = playButtonPressed,
-      emboss = false,
-      -- Properties for a rounded rectangle button
-      shape = "roundedRect",
-      width = 200,
-      height = 40,
-      cornerRadius = 2,
-      fillColor = { default={0.5,0.5,0.5,1}, over={0.5,0.5,0.5,0.5} },
-      }
-   )
 
+   local function update()
+        myCharacter.x = display.contentCenterX
+        myCharacter.y = display.contentCenterY
+   end
+
+   local function moveEnemyReverse(event)
+        transition.to(enemy, {time=1000, x=enemy.x - 100, y=enemy.y - 50, onComplete=moveEnemyStart})
+   end
+
+   local function moveEnemyStart(event)
+        transition.to(enemy, {time=1000, x=enemy.x + 100, y=enemy.y + 50, onComplete=moveEnemyReverse})
+   end
+
+    timer.performWithDelay(0, update, 0)
+    moveEnemyStart()
+
+   -- note: order matters here. If background is insert last, it covers everything else
    sceneGroup:insert(background)
-   sceneGroup:insert(titleText)
-   sceneGroup:insert(playButton)
+   sceneGroup:insert(myCharacter)
+   sceneGroup:insert(enemy)
+   sceneGroup:insert(levelText)
+
+   Runtime:addEventListener("touch", movePlayer)
+   Runtime:addEventListener("collision", onGlobalCollision)
 end
  
 -- "scene:show()"
@@ -78,6 +108,8 @@ function scene:hide( event )
       -- Example: stop timers, stop animation, stop audio, etc.
    elseif ( phase == "did" ) then
       -- Called immediately after scene goes off screen.
+      Runtime:removeEventListener("touch", movePlayer)
+      physics:pause()
    end
 end
  
