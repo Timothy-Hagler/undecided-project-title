@@ -1,6 +1,9 @@
 local composer = require( "composer" )
 local widget = require("widget")
+<<<<<<< HEAD
 local pokemon = require("pokemon")
+=======
+>>>>>>> 5d1dc5b87ab336bf83895cf9e7f5556bb6edaaab
 local scene = composer.newScene()
 local touchInUse = false
 -- local world = display.newGroup()
@@ -89,11 +92,15 @@ function scene:create( event )
       -- transition.moveBy(world, {time = 1000, x=display.contentCenterX-event.x, y=display.contentCenterY-event.y, onComplete=function() touchInUse = false end}) -- disabled: group transitions not working?
       for i,v in ipairs(worldTable) do
          -- print(i, v)
+<<<<<<< HEAD
          if (v.shape ~= nil) then
             transition.moveBy(v.shape, {time = 1000, x=display.contentCenterX-event.x, y=display.contentCenterY-event.y, onComplete=function() touchInUse = false end})
          else
             transition.moveBy(v, {time = 1000, x=display.contentCenterX-event.x, y=display.contentCenterY-event.y, onComplete=function() touchInUse = false end})
          end
+=======
+         transition.moveBy(v, {time = 1000, x=display.contentCenterX-event.x, y=display.contentCenterY-event.y, onComplete=function() touchInUse = false end})
+>>>>>>> 5d1dc5b87ab336bf83895cf9e7f5556bb6edaaab
       end
    end
 
