@@ -1,4 +1,3 @@
-require("lldebugger").start()    -- add support for line by line debugger
 local composer = require( "composer" )
 local widget = require("widget")
 local scene = composer.newScene()
