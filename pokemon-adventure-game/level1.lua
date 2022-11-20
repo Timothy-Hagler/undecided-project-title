@@ -1,5 +1,6 @@
 local composer = require( "composer" )
 local widget = require("widget")
+local pokemon = require("pokemon")
 local scene = composer.newScene()
 local touchInUse = false
 -- local world = display.newGroup()
@@ -49,6 +50,18 @@ function scene:create( event )
    -- world:insert(enemy)
    table.insert(worldTable, enemy);
 
+   local testPokemon1 = pokemon:new({HP = 200, x=display.contentCenterX, y=display.contentCenterY + 100})
+   testPokemon1:spawn()
+   table.insert(worldTable, testPokemon1);
+   
+   local testPokemon2 = pokemon:new({HP = 200, x=display.contentCenterX - 100, y=display.contentCenterY + 100})
+   testPokemon2:spawn()
+   table.insert(worldTable, testPokemon2);
+
+   local testPokemon3 = pokemon:new({HP = 200, x=display.contentCenterX + 100, y=display.contentCenterY + 100})
+   testPokemon3:spawn()
+   table.insert(worldTable, testPokemon3);
+
    local function onGlobalCollision( event )
       print( "handler" )
       if ( event.phase == "began" ) then
@@ -76,7 +89,11 @@ function scene:create( event )
       -- transition.moveBy(world, {time = 1000, x=display.contentCenterX-event.x, y=display.contentCenterY-event.y, onComplete=function() touchInUse = false end}) -- disabled: group transitions not working?
       for i,v in ipairs(worldTable) do
          -- print(i, v)
-         transition.moveBy(v, {time = 1000, x=display.contentCenterX-event.x, y=display.contentCenterY-event.y, onComplete=function() touchInUse = false end})
+         if (v.shape ~= nil) then
+            transition.moveBy(v.shape, {time = 1000, x=display.contentCenterX-event.x, y=display.contentCenterY-event.y, onComplete=function() touchInUse = false end})
+         else
+            transition.moveBy(v, {time = 1000, x=display.contentCenterX-event.x, y=display.contentCenterY-event.y, onComplete=function() touchInUse = false end})
+         end
       end
    end
 
