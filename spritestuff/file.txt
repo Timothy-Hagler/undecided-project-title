@@ -1,0 +1,2 @@
+list of sprite coords/dimensions for each png:
+
