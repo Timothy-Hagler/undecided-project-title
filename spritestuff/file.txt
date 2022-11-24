@@ -1,2 +1,20 @@
 list of sprite coords/dimensions for each png:
 
+bulbasaur:
+{
+  {x = 39, y = 119, width = 70, height = 66}, -- 1. full bulb
+  {x = 183, y = 91, width = 40, height = 34}, -- 2. mini bulb sprite
+  {x = 365, y = 197, width = 51, height = 36}, -- 3. bulb back (color from background might be included oops
+  {x = 12, y = 271, width = 30, height = 32}, -- 4. bulb forward walk 1
+  {x = 76, y = 273, width = 30, height = 32}, -- 5. bulb forward walk 2
+  {x = 140, y = 271, width = 30, height = 32}, -- 6. bulb forward walk 3
+  {x = 204, y = 273, width = 30, height = 32}, -- 7. bulb forward walk 4
+  {x = 8, y = 335, width = 38, height = 30}, -- 8. bulb side run 1
+  {x = 72, y = 337, width = 38, height = 30}, -- 9. bulb side run 2
+  {x = 136, y = 335, width = 38, height = 30}, -- 10. bulb side run 3
+  {x = , y = , width = 38, height = 30}, -- 11. bulb side run 4
+  {x = 10, y = 399, width = 38, height = 30}, -- 12. bulb right 1
+  {x = 74, y = 401, width = 38, height = 30}, -- 13. bulb right 2
+  {x = 138, y = 399, width = 38, height = 30}, -- 14. bulb right 3
+  {x = 202, y = 401, width = 38, height = 30}, -- 15. bulb right 4
+}
