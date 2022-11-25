@@ -3,9 +3,6 @@ local widget = require("widget")
 local scene = composer.newScene()
 local touchInUse = false
 -- local world = display.newGroup()
--- world.x = display.contentCenterX
--- world.y = display.contentCenterY -- track world movement
-worldTable = {}
 ---------------------------------------------------------------------------------
 -- All code outside of the listener functions will only be executed ONCE
 -- unless "composer.removeScene()" is called.
@@ -16,91 +13,81 @@ worldTable = {}
 ---------------------------------------------------------------------------------
  
 -- "scene:create()"
+
+local enemy, playerChar, background
+
 function scene:create( event )
-   -- Initialize the scene here.
-   -- Example: add display objects to "sceneGroup", add touch listeners, etc.
+
+   -- Initialize the scene
 
    local sceneGroup = self.view
-   physics.start()
+   physics.start( true )
    physics.setGravity(0,0)
    
-   local levelText = display.newText("Level 1", display.contentCenterX, display.contentCenterY / 2, native.systemFont, 30)
-   
-   --[[
-      world = display.newGroup()
-      world.x = 0
-      world.y = 0 -- track world movement
-      sceneGroup:insert(world)
-   ]]
+   local levelText = display.newText( "Level 1", display.contentCenterX, display.contentCenterY / 2, native.systemFont, 30 )
+	
+	world = display.newGroup()
+	sceneGroup:insert( world )
 
-   local background = display.newImage("example_background.png", display.contentCenterX, display.contentCenterY)
+   background = display.newImage( "example_background.png", display.contentCenterX, display.contentCenterY )
    background.xScale = 0.4
    background.yScale = 0.4
+	
+   world:insert( background )
 
-   -- world:insert(background)   -- disabled: group transitions not working?
-   table.insert(worldTable, background);
-
-   local myCharacter = display.newCircle(display.contentCenterX, display.contentCenterY, 25)
-   physics.addBody(myCharacter, "kinematic", { density=0, friction=0.5, bounce=0.3 })
-
-   local enemy = display.newCircle(display.contentCenterX + 100, display.contentCenterY, 25)
+   playerChar = display.newCircle( display.contentCenterX, display.contentCenterY, 25 )
+   physics.addBody( playerChar, "dynamic", { radius = 25 } )
+	
+	
+   enemy = display.newCircle(display.contentCenterX + 100, display.contentCenterY, 25 )
    enemy:setFillColor(1,0,0)
-   physics.addBody(enemy, "kinematic", { density=500, friction=0.5, bounce=0.3 })
-   -- world:insert(enemy)
-   table.insert(worldTable, enemy);
+	physics.addBody( enemy, "dynamic", { radius = 25 } )
+   world:insert( enemy )
+	
 
    local function onGlobalCollision( event )
-      print( "handler" )
+      transition.cancel( event.target )
+		print( "handler" )
       if ( event.phase == "began" ) then
          print("hit")
       elseif ( event.phase == "ended" ) then
          print("no longer hit")
       end
    end
-   
-   local function movePlayer(event)
-      -- interrupt any existing events to move to the new requested location
-      if (touchInUse) then
-         for i,v in ipairs(worldTable) do
-            transition.cancel(v)
-         end
-      end
-      touchInUse = true
+	
+	enemy:addEventListener("collision", onGlobalCollision)
+	
+	-- Immediately stop world transitions and movement
+	local function cancelPlayerMovement( event )
+		transition.cancel( world );
+		touchInUse = false
+	end
 
-      --[[
-         -- #DEBUG
-      print("STARTING MOVEMENT: "..event.x..", "..event.y)
-      print("\tWITH BKGND AT: "..background.x..", "..background.y)
-      print("\tEXP DELTA: "..event.x-background.x..", "..event.y-background.y)
-      ]]
-      -- transition.moveBy(world, {time = 1000, x=display.contentCenterX-event.x, y=display.contentCenterY-event.y, onComplete=function() touchInUse = false end}) -- disabled: group transitions not working?
-      for i,v in ipairs(worldTable) do
-         -- print(i, v)
-         transition.moveBy(v, {time = 1000, x=display.contentCenterX-event.x, y=display.contentCenterY-event.y, onComplete=function() touchInUse = false end})
-      end
-   end
-
-
-   local function update()
-        myCharacter.x = display.contentCenterX
-        myCharacter.y = display.contentCenterY
-   end
+   -- Move the world wrt. the player to simulate player movement
+	local function movePlayer( event )
+		-- interrupt any existing events to move to the new requested location
+		if (touchInUse) then
+			transition.cancel( world );
+		end
+		touchInUse = true
+		transition.moveBy( world, {time = 1000, x=display.contentCenterX-event.x, y=display.contentCenterY-event.y, onComplete=cancelPlayerMovement} )
+		-- world.setLinearVelocity
+		
+	end
+	
+   playerChar.x = display.contentCenterX
+	playerChar.y = display.contentCenterY
 
    -- local function moveEnemyReverse(event)
    --      transition.to(enemy, {time=1000, x=enemy.x - 100, y=enemy.y - 50, onComplete=moveEnemyStart})
    -- end
-
+	
    -- local function moveEnemyStart(event)
    --      transition.to(enemy, {time=1000, x=enemy.x + 100, y=enemy.y + 50, onComplete=moveEnemyReverse})
    -- end
 
-    timer.performWithDelay(0, update, 0)
    --  moveEnemyStart()
 
-   -- note: order matters here. If background is insert last, it covers everything else
-   sceneGroup:insert(background)
-   sceneGroup:insert(myCharacter)
-   -- sceneGroup:insert(enemy)
    sceneGroup:insert(levelText)
 
    Runtime:addEventListener("tap", movePlayer)  -- # TODO: was formerly touch
@@ -112,7 +99,9 @@ function scene:show( event )
  
    local sceneGroup = self.view
    local phase = event.phase
- 
+
+	physics.start( true )
+
    if ( phase == "will" ) then
       -- Called when the scene is still off screen (but is about to come on screen).
    elseif ( phase == "did" ) then
@@ -135,7 +124,7 @@ function scene:hide( event )
    elseif ( phase == "did" ) then
       -- Called immediately after scene goes off screen.
       Runtime:removeEventListener("touch", movePlayer)
-      physics:pause()
+      physics.pause()
    end
 end
  
