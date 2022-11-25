@@ -1,5 +1,6 @@
 local composer = require( "composer" )
 local widget = require("widget")
+local player = require("player")
 local scene = composer.newScene()
 local touchInUse = false
 -- local world = display.newGroup()
@@ -38,9 +39,10 @@ function scene:create( event )
 	physics.addBody(background,kinematic);	-- add bg to physics to use velocity
 	background.isSensor = true	-- disable bg collision
 
-   playerChar = display.newCircle( display.contentCenterX, display.contentCenterY, 25 )
-   physics.addBody( playerChar, "dynamic", { radius = 25 } )
-	playerChar.isSensor = true
+   playerChar = player:new({x=display.contentCenterX, y=display.contentCenterY})--display.newCircle( display.contentCenterX, display.contentCenterY, 25 )
+   playerChar:spawn()
+--   physics.addBody( playerChar, "dynamic", { radius = 25 } )
+--	playerChar.isSensor = true
 	
 	
    enemy = display.newCircle(display.contentCenterX + 100, display.contentCenterY, 25 )
