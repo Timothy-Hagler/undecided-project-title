@@ -54,3 +54,23 @@ squirtle:
   {x = 139, y = 395, width = 30, height = 30}, -- 13. squirtle right 3
   {x = 203, y = 397, width = 30, height = 30}, -- 14. squirtle right 4
 }
+
+ashSheet:
+{
+  {x = 6, y = 9, width = 16, height = 19}, -- 1. ash forward 1
+  {x = 24, y = 9, width = 16, height = 19}, -- 2. ash forward 2
+  {x = 41, y = 9, width = 16, height = 19}, -- 3. ash forward 3
+  {x = 59, y = 9, width = 16, height = 19}, -- 4. ash left 1
+  {x = 77, y = 10, width = 16, height = 18}, -- 5. ash left 2
+  {x = 94, y = 10, width = 16, height = 18}, -- 6. ash left 3
+  {x = 113, y = 9, width = 16, height = 19}, -- 7. ash up 1
+  {x = 132, y = 9, width = 16, height = 19}, -- 8. ash up 2
+  {x = 150, y = 9, width = 16, height = 19}, -- 9. ash up 3
+  {x = 168, y = 9, width = 16, height = 19}, -- 10. ash right 1
+  {x = 186, y = 10, width = 16, height = 18}, -- 11. ash right 2
+  {x = 203, y = 10, width = 16, height = 18}, -- 12. ash right 3
+  {x = 138, y = 139, width = 18, height = 24}, -- 13. surf forward
+  {x = 138, y = 171, width = 18, height = 25}, -- 14. surf up
+  {x = 138, y = 203, width = 20, height = 23}, -- 15. surf left
+  {x = 137, y = 234, width = 20, height = 23}, -- 16. surf right
+}
