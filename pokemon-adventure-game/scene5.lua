@@ -1,6 +1,7 @@
 -- Scene Composer for Route 1
 local composer = require( "composer" )
 local scene = composer.newScene()
+local player = require("player")
 
 local musicTrack
  
@@ -43,10 +44,10 @@ function scene:create( event )
 
    sceneGroup:insert(obstacles)
 
-   playerChar = display.newCircle( display.contentCenterX, display.contentCenterY, 25 )
-   physics.addBody( playerChar, "dynamic", { radius = 25 } )
+   playerChar = player:new({x=display.contentCenterX, y=display.contentCenterY})--display.newCircle( display.contentCenterX, display.contentCenterY, 25 )
+   playerChar:spawn()
 	--playerChar.isSensor = true
-   sceneGroup:insert(playerChar)
+   --sceneGroup:insert(playerChar)
 
    local int1Sheet = graphics.newImageSheet("RouteInteractables1.png", Options) 
 
@@ -118,6 +119,7 @@ function scene:create( event )
 
    local function onGlobalCollision( event )
       transition.cancel( event.target )
+      playerChar.shape:setLinearVelocity(0,0)
       
 		print( "handler" )
       if ( event.phase == "began" ) then
