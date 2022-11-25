@@ -4,14 +4,22 @@ local scene = composer.newScene()
 
 local musicTrack
  
+local enemy, playerChar, background
+local player_velocity_scale = 150
+worldTable = {}
 -- "scene:create()"
 function scene:create( event )
  
    local sceneGroup = self.view
+   physics.start()
+   physics.setGravity(0,0)
+   physics.setDrawMode("hybrid")
  
    local background = display.newImage('route.png')
    background.x = display.contentCenterX
    background.y = display.contentCenterY
+   physics.addBody(background,"dynamic");	-- add bg to physics to use velocity
+	background.isSensor = true	-- disable bg collision
    sceneGroup:insert(background)
 
    local Options = {
@@ -31,9 +39,14 @@ function scene:create( event )
    obstacles.x = display.contentCenterX
    obstacles.y = display.contentCenterY
 
-   physics.addBody(obstacles, "static", {outline = obstaclesOutline});
+   physics.addBody(obstacles, "kinematic", {outline = obstaclesOutline, density=500});
 
    sceneGroup:insert(obstacles)
+
+   playerChar = display.newCircle( display.contentCenterX, display.contentCenterY, 25 )
+   physics.addBody( playerChar, "dynamic", { radius = 25 } )
+	--playerChar.isSensor = true
+   sceneGroup:insert(playerChar)
 
    local int1Sheet = graphics.newImageSheet("RouteInteractables1.png", Options) 
 
@@ -43,7 +56,7 @@ function scene:create( event )
    interactables1.x = display.contentCenterX
    interactables1.y = display.contentCenterY
 
-   physics.addBody(interactables1, "static", {outline = interactables1Outline});
+   physics.addBody(interactables1, "dynamic", {outline = interactables1Outline, density=500});
 
    sceneGroup:insert(interactables1)
 
@@ -55,7 +68,7 @@ function scene:create( event )
    interactables2.x = display.contentCenterX
    interactables2.y = display.contentCenterY
 
-   physics.addBody(interactables2, "static", {outline = interactables2Outline});
+   physics.addBody(interactables2, "dynamic", {outline = interactables2Outline, density=500});
 
    sceneGroup:insert(interactables2)
 
@@ -102,6 +115,62 @@ function scene:create( event )
    sceneGroup:insert(boulderGoal)
 
    musicTrack = audio.loadStream( "route1Music.mp3")
+
+   local function onGlobalCollision( event )
+      transition.cancel( event.target )
+      
+		print( "handler" )
+      if ( event.phase == "began" ) then
+         print("hit")
+      elseif ( event.phase == "ended" ) then
+         print("no longer hit")
+      end
+   end
+	
+	-- Immediately stop world transitions and movement
+	local function cancelPlayerMovement( event )
+		transition.cancel( world );
+		touchInUse = false
+	end
+
+   -- Move the world wrt. the player to simulate player movement
+	local function movePlayer( event )
+		print(event.phase)
+		if ( event.phase == "moved" or event.phase == "began") then
+			xvel = (display.contentCenterX - event.x)/(display.contentWidth/2) * player_velocity_scale
+			yvel = (display.contentCenterY - event.y)/(display.contentHeight/2) * player_velocity_scale
+			print(xvel .. ", "..yvel)	-- #DEBUG
+			background:setLinearVelocity( xvel, yvel )
+			boulderGoal:setLinearVelocity( xvel, yvel )
+			boulder:setLinearVelocity( xvel, yvel )
+			interactables1:setLinearVelocity( xvel, yvel )
+			interactables2:setLinearVelocity( xvel, yvel )
+			obstacles:setLinearVelocity( xvel, yvel )
+			--enemy:setLinearVelocity(enemy:getLinearVelocity() + xvel, yvel)
+			-- timer.performWithDelay(100, function() bg.setLinearVelocity( 0,0 ) end, 1);
+		elseif ( event.phase == "ended" ) then
+			background:setLinearVelocity(0,0)
+			boulderGoal:setLinearVelocity(0,0)
+			boulder:setLinearVelocity(0,0)
+			interactables1:setLinearVelocity(0,0)
+			interactables2:setLinearVelocity(0,0)
+			obstacles:setLinearVelocity(0,0)
+			--enemy:setLinearVelocity(0,0)
+		end
+	end
+
+   local function update()
+      playerChar.x = display.contentCenterX
+      playerChar.y = display.contentCenterY
+   end
+
+--   timer.performWithDelay(0, update, 0)
+	
+ --  playerChar.x = display.contentCenterX
+	--playerChar.y = display.contentCenterY
+
+   Runtime:addEventListener("touch", movePlayer)  -- # TODO: was formerly touch
+   Runtime:addEventListener("collision", onGlobalCollision)
 
 end
  
