@@ -15,6 +15,7 @@ local touchInUse = false
 -- "scene:create()"
 
 local enemy, playerChar, background
+local player_velocity_scale = 150
 
 function scene:create( event )
 
@@ -34,9 +35,12 @@ function scene:create( event )
    background.yScale = 0.4
 	
    world:insert( background )
+	physics.addBody(background,kinematic);	-- add bg to physics to use velocity
+	background.isSensor = true	-- disable bg collision
 
    playerChar = display.newCircle( display.contentCenterX, display.contentCenterY, 25 )
    physics.addBody( playerChar, "dynamic", { radius = 25 } )
+	playerChar.isSensor = true
 	
 	
    enemy = display.newCircle(display.contentCenterX + 100, display.contentCenterY, 25 )
@@ -65,14 +69,18 @@ function scene:create( event )
 
    -- Move the world wrt. the player to simulate player movement
 	local function movePlayer( event )
-		-- interrupt any existing events to move to the new requested location
-		if (touchInUse) then
-			transition.cancel( world );
+		print(event.phase)
+		if ( event.phase == "moved" or event.phase == "began") then
+			xvel = (display.contentCenterX - event.x)/(display.contentWidth/2) * player_velocity_scale
+			yvel = (display.contentCenterY - event.y)/(display.contentHeight/2) * player_velocity_scale
+			print(xvel .. ", "..yvel)	-- #DEBUG
+			background:setLinearVelocity( xvel, yvel )
+			enemy:setLinearVelocity(enemy:getLinearVelocity() + xvel, yvel)
+			-- timer.performWithDelay(100, function() bg.setLinearVelocity( 0,0 ) end, 1);
+		elseif ( event.phase == "ended" ) then
+			background:setLinearVelocity(0,0)
+			enemy:setLinearVelocity(0,0)
 		end
-		touchInUse = true
-		transition.moveBy( world, {time = 1000, x=display.contentCenterX-event.x, y=display.contentCenterY-event.y, onComplete=cancelPlayerMovement} )
-		-- world.setLinearVelocity
-		
 	end
 	
    playerChar.x = display.contentCenterX
@@ -90,7 +98,7 @@ function scene:create( event )
 
    sceneGroup:insert(levelText)
 
-   Runtime:addEventListener("tap", movePlayer)  -- # TODO: was formerly touch
+   Runtime:addEventListener("touch", movePlayer)  -- # TODO: was formerly touch
    Runtime:addEventListener("collision", onGlobalCollision)
 end
  
