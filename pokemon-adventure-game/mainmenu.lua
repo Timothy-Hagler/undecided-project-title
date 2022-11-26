@@ -23,7 +23,7 @@ function scene:create( event )
 
    local function playButtonPressed(event)
       if (event.phase == "ended") then
-         composer.gotoScene("level1")
+         composer.gotoScene("level3")
       end
    end
 
