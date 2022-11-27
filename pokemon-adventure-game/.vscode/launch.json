@@ -22,7 +22,7 @@
             },
             "args": [
                 // "--no-console YES --debug 1 -project ${workspaceFolder}/main.lua"
-                "--no-console --debug -project ${workspaceFolder}/main.lua"
+                "--no-console --debug --project ${workspaceFolder}/main.lua"
             ]
         },
         {
