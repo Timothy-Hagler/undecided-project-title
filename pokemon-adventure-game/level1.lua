@@ -47,7 +47,7 @@ function scene:create( event )
 	
    enemy = display.newCircle(display.contentCenterX + 100, display.contentCenterY, 25 )
    enemy:setFillColor(1,0,0)
-	physics.addBody( enemy, "dynamic", { radius = 25 } )
+	physics.addBody( enemy, "static", { radius = 25 } )
    world:insert( enemy )
 	
 
@@ -56,6 +56,7 @@ function scene:create( event )
 		print( "handler" )
       if ( event.phase == "began" ) then
          print("hit")
+         playerChar.prevXForce = 0
       elseif ( event.phase == "ended" ) then
          print("no longer hit")
       end
@@ -73,12 +74,14 @@ function scene:create( event )
 	local function movePlayer( event )
 		print(event.phase)
 		if ( event.phase == "moved" or event.phase == "began") then
-			xvel = (display.contentCenterX - event.x)/(display.contentWidth/2) * player_velocity_scale
-			yvel = (display.contentCenterY - event.y)/(display.contentHeight/2) * player_velocity_scale
-			print(xvel .. ", "..yvel)	-- #DEBUG
-			background:setLinearVelocity( xvel, yvel )
-			enemy:setLinearVelocity(enemy:getLinearVelocity() + xvel, yvel)
+			--xvel = (display.contentCenterX - event.x)/(display.contentWidth/2) * player_velocity_scale
+			--yvel = (display.contentCenterY - event.y)/(display.contentHeight/2) * player_velocity_scale
+			--print(xvel .. ", "..yvel)	-- #DEBUG
+			--background:setLinearVelocity( xvel, yvel )
+			--enemy:setLinearVelocity(enemy:getLinearVelocity() + xvel, yvel)
 			-- timer.performWithDelay(100, function() bg.setLinearVelocity( 0,0 ) end, 1);
+         --playerChar:applyForce(event.x, event.y, playerChar.x, playerChar.y)
+         playerChar:move(event)
 		elseif ( event.phase == "ended" ) then
 			background:setLinearVelocity(0,0)
 			enemy:setLinearVelocity(0,0)
