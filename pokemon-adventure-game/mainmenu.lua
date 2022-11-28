@@ -19,7 +19,7 @@ function scene:create( event )
    -- Initialize the scene here.
    -- Example: add display objects to "sceneGroup", add touch listeners, etc.
    local titleText = display.newText("Pokemon Adventure Game", display.contentCenterX, display.contentCenterY / 2, native.systemFont, 30)
-   local background = display.newImage("mainmenu_background.png", display.contentCenterX, display.contentCenterY)
+   local background = display.newImage("images/mainmenu_background.png", display.contentCenterX, display.contentCenterY)
 
    local function playButtonPressed(event)
       if (event.phase == "ended") then

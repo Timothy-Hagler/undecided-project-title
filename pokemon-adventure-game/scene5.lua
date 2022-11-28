@@ -19,7 +19,7 @@ function scene:create( event )
    physics.setDrawMode("hybrid")
 
 
-   local background = display.newImage('route.png')
+   local background = display.newImage('images/route.png')
    background.x = display.contentCenterX
    background.y = display.contentCenterY
 	world:insert(background)
@@ -33,7 +33,7 @@ function scene:create( event )
       }
    }
 
-   local obsSheet = graphics.newImageSheet("RouteObstacles.png", Options) 
+   local obsSheet = graphics.newImageSheet("images/RouteObstacles.png", Options) 
 
    obstacles = display.newImage(obsSheet, 1);
    obstaclesOutline = graphics.newOutline(2, obsSheet, 1);
@@ -49,7 +49,7 @@ function scene:create( event )
    sceneGroup:insert(playerChar.shape)
 
 
-   local int1Sheet = graphics.newImageSheet("RouteInteractables1.png", Options) 
+   local int1Sheet = graphics.newImageSheet("images/RouteInteractables1.png", Options) 
 
    interactables1 = display.newImage(int1Sheet, 1);
    interactables1Outline = graphics.newOutline(2, int1Sheet, 1);
@@ -61,7 +61,7 @@ function scene:create( event )
 	world:insert(interactables1)
 
 
-   local int2Sheet = graphics.newImageSheet("RouteInteractables2.png", Options) 
+   local int2Sheet = graphics.newImageSheet("images/RouteInteractables2.png", Options) 
 
    interactables2 = display.newImage(int2Sheet, 1);
    interactables2Outline = graphics.newOutline(2, int2Sheet, 1);
@@ -80,7 +80,7 @@ function scene:create( event )
    }
 
 
-	local boulderSheet = graphics.newImageSheet("boulder.png", boulderOptions) 
+	local boulderSheet = graphics.newImageSheet("images/boulder.png", boulderOptions) 
 
    boulder = display.newImage(boulderSheet, 1);
    boulderOutline = graphics.newOutline(2, boulderSheet, 1);
@@ -100,7 +100,7 @@ function scene:create( event )
       }
    }
 
-	local boulderGoalSheet = graphics.newImageSheet("boulderGoal.png", boulderGoalOptions) 
+	local boulderGoalSheet = graphics.newImageSheet("images/boulderGoal.png", boulderGoalOptions) 
 
    boulderGoal = display.newImage(boulderGoalSheet, 1);
    boulderGoalOutline = graphics.newOutline(2, boulderGoalSheet, 1);
@@ -115,7 +115,7 @@ function scene:create( event )
 
 	sceneGroup:insert(world)
 
-   musicTrack = audio.loadStream( "route1Music.mp3")
+   musicTrack = audio.loadStream( "audio/route1Music.mp3")
 
 
 	-- Move the world wrt. the player to simulate player movement
