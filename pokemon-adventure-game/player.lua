@@ -13,7 +13,7 @@ function Player:spawn()
     self.shape.pp = self;  -- parent object
     self.shape.tag = self.tag; -- player
     self.shape:setFillColor (1,1,1);
-    physics.addBody(self.shape, "dynamic", {bounciness=0, radius=15}); 
+    physics.addBody(self.shape, "dynamic", {bounciness=0, radius=15, linearDamping = 10});
 end
 
 function Player:InitiateBattle()

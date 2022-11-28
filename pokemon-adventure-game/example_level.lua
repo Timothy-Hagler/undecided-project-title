@@ -1,9 +1,7 @@
 local composer = require( "composer" )
-local widget = require("widget")
 local player = require("player")
+local perspective = require("lib.perspective.perspective")
 local scene = composer.newScene()
-local touchInUse = false
--- local world = display.newGroup()
 ---------------------------------------------------------------------------------
 -- All code outside of the listener functions will only be executed ONCE
 -- unless "composer.removeScene()" is called.
@@ -15,7 +13,7 @@ local touchInUse = false
  
 -- "scene:create()"
 
-local enemy, playerChar, background
+local camera, world, playerChar
 local player_velocity_scale = 150
 
 function scene:create( event )
@@ -23,6 +21,8 @@ function scene:create( event )
    -- Initialize the scene
 
    local sceneGroup = self.view
+
+	world = display.newGroup()
    physics.start( true )
    physics.setGravity(0,0)
    
@@ -36,20 +36,16 @@ function scene:create( event )
    background.yScale = 0.4
 	
    world:insert( background )
-	physics.addBody(background,kinematic);	-- add bg to physics to use velocity
-	background.isSensor = true	-- disable bg collision
-
-   playerChar = player:new({x=display.contentCenterX, y=display.contentCenterY})--display.newCircle( display.contentCenterX, display.contentCenterY, 25 )
+	playerChar = player:new({x=display.contentCenterX, y=display.contentCenterY})--display.newCircle( display.contentCenterX, display.contentCenterY, 25 )
    playerChar:spawn()
---   physics.addBody( playerChar, "dynamic", { radius = 25 } )
---	playerChar.isSensor = true
-	
-	
-   enemy = display.newCircle(display.contentCenterX + 100, display.contentCenterY, 25 )
+	sceneGroup:insert(playerChar.shape)
+
+   local enemy = display.newCircle(display.contentCenterX + 100, display.contentCenterY, 25 )
    enemy:setFillColor(1,0,0)
-	physics.addBody( enemy, "static", { radius = 25 } )
+	physics.addBody( enemy, "dynamic", { radius = 25 } )
+	enemy.linearDamping = 5
+	enemy.angularDamping = 5
    world:insert( enemy )
-	
 
    local function onGlobalCollision( event )
       transition.cancel( event.target )
@@ -64,46 +60,26 @@ function scene:create( event )
 	
 	enemy:addEventListener("collision", onGlobalCollision)
 	
-	-- Immediately stop world transitions and movement
-	local function cancelPlayerMovement( event )
-		transition.cancel( world );
-		touchInUse = false
-	end
-
    -- Move the world wrt. the player to simulate player movement
 	local function movePlayer( event )
 		print(event.phase)
 		if ( event.phase == "moved" or event.phase == "began") then
-			--xvel = (display.contentCenterX - event.x)/(display.contentWidth/2) * player_velocity_scale
-			--yvel = (display.contentCenterY - event.y)/(display.contentHeight/2) * player_velocity_scale
-			--print(xvel .. ", "..yvel)	-- #DEBUG
-			--background:setLinearVelocity( xvel, yvel )
-			--enemy:setLinearVelocity(enemy:getLinearVelocity() + xvel, yvel)
-			-- timer.performWithDelay(100, function() bg.setLinearVelocity( 0,0 ) end, 1);
-         --playerChar:applyForce(event.x, event.y, playerChar.x, playerChar.y)
-         playerChar:move(event)
+			local xvel, yvel
+			xvel = (event.x - display.contentCenterX)/(display.contentWidth/2) * player_velocity_scale
+			yvel = (event.y - display.contentCenterY)/(display.contentHeight/2) * player_velocity_scale
+			playerChar.shape:setLinearVelocity(xvel, yvel)
+
 		elseif ( event.phase == "ended" ) then
-			background:setLinearVelocity(0,0)
-			enemy:setLinearVelocity(0,0)
+			playerChar.shape:setLinearVelocity(0, 0)
 		end
 	end
 	
    playerChar.x = display.contentCenterX
 	playerChar.y = display.contentCenterY
 
-   -- local function moveEnemyReverse(event)
-   --      transition.to(enemy, {time=1000, x=enemy.x - 100, y=enemy.y - 50, onComplete=moveEnemyStart})
-   -- end
-	
-   -- local function moveEnemyStart(event)
-   --      transition.to(enemy, {time=1000, x=enemy.x + 100, y=enemy.y + 50, onComplete=moveEnemyReverse})
-   -- end
-
-   --  moveEnemyStart()
-
    sceneGroup:insert(levelText)
 
-   Runtime:addEventListener("touch", movePlayer)  -- # TODO: was formerly touch
+   Runtime:addEventListener("touch", movePlayer)
    Runtime:addEventListener("collision", onGlobalCollision)
 end
  
@@ -113,14 +89,24 @@ function scene:show( event )
    local sceneGroup = self.view
    local phase = event.phase
 
-	physics.start( true )
-
+	physics.start()
    if ( phase == "will" ) then
-      -- Called when the scene is still off screen (but is about to come on screen).
+		-- Called when the scene is still off screen (but is about to come on screen).
+		camera = perspective.createView(2)
+		camera:add(playerChar.shape, 1) -- Add player to layer 1 of the camera
+		camera:appendLayer()	-- add layer 0 in front of the camera
+		
+		camera:add(world, 2)
+		camera:setParallax(0, 1) -- set parallax for each layer in descending order
+		
+		camera.damping = 10 -- A bit more fluid tracking
+		camera:setFocus(playerChar.shape) -- Set the focus to the player
+		print("Layers: "..camera:layerCount())
    elseif ( phase == "did" ) then
       -- Called when the scene is now on screen.
       -- Insert code here to make the scene come alive.
       -- Example: start timers, begin animation, play audio, etc.
+		camera:track() -- Begin auto-tracking
    end
 end
  
@@ -129,6 +115,8 @@ function scene:hide( event )
  
    local sceneGroup = self.view
    local phase = event.phase
+
+	camera:destroy()
  
    if ( phase == "will" ) then
       -- Called when the scene is on screen (but is about to go off screen).
