@@ -71,15 +71,13 @@ function scene:create( event )
 	local function movePlayer( event )
 		print(event.phase)
 		if ( event.phase == "moved" or event.phase == "began") then
-			xvel = (display.contentCenterX - event.x)/(display.contentWidth/2) * player_velocity_scale
-			yvel = (display.contentCenterY - event.y)/(display.contentHeight/2) * player_velocity_scale
-			print(xvel .. ", "..yvel)	-- #DEBUG
-			background:setLinearVelocity( xvel, yvel )
-			enemy:setLinearVelocity(enemy:getLinearVelocity() + xvel, yvel)
-			-- timer.performWithDelay(100, function() bg.setLinearVelocity( 0,0 ) end, 1);
+			local xvel, yvel
+			xvel = (event.x - display.contentCenterX)/(display.contentWidth/2) * player_velocity_scale
+			yvel = (event.y - display.contentCenterY)/(display.contentHeight/2) * player_velocity_scale
+         playerChar:move(xvel, yvel)
+
 		elseif ( event.phase == "ended" ) then
-			background:setLinearVelocity(0,0)
-			enemy:setLinearVelocity(0,0)
+         playerChar:StopMoving()
 		end
 	end
 	
