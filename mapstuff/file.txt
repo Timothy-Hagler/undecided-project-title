@@ -1,0 +1,1 @@
+the full maps are there as a base, then I have "maps" that have the water and obstacles 
