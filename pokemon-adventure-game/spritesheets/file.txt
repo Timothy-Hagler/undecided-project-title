@@ -1,0 +1,76 @@
+list of sprite coords/dimensions for each png:
+
+bulbasaur:
+{
+  {x = 39, y = 119, width = 70, height = 66}, -- 1. full bulb
+  {x = 183, y = 91, width = 40, height = 34}, -- 2. mini bulb sprite
+  {x = 365, y = 197, width = 51, height = 36}, -- 3. bulb back (color from background might be included oops
+  {x = 12, y = 271, width = 30, height = 32}, -- 4. bulb forward walk 1
+  {x = 76, y = 273, width = 30, height = 32}, -- 5. bulb forward walk 2
+  {x = 140, y = 271, width = 30, height = 32}, -- 6. bulb forward walk 3
+  {x = 204, y = 273, width = 30, height = 32}, -- 7. bulb forward walk 4
+  {x = 8, y = 335, width = 38, height = 30}, -- 8. bulb side run 1
+  {x = 72, y = 337, width = 38, height = 30}, -- 9. bulb side run 2
+  {x = 136, y = 335, width = 38, height = 30}, -- 10. bulb side run 3
+  {x = , y = , width = 38, height = 30}, -- 11. bulb side run 4
+  {x = 10, y = 399, width = 38, height = 30}, -- 12. bulb right 1
+  {x = 74, y = 401, width = 38, height = 30}, -- 13. bulb right 2
+  {x = 138, y = 399, width = 38, height = 30}, -- 14. bulb right 3
+  {x = 202, y = 401, width = 38, height = 30}, -- 15. bulb right 4
+}
+
+charmander:
+{
+  {x = 44, y = 136, width = 76, height = 84}, -- 1. full char
+  {x = 181, y = 109, width = 42, height = 36}, -- 2. mini char sprite
+  {x = 16, y = 269, width = 22, height = 32}, -- 3. char forward walk 1
+  {x = 80, y = 271, width = 22, height = 32}, -- 4. char forward walk 2
+  {x = 144, y = 269, width = 22, height = 32}, -- 5. char forward walk 3
+  {x = 208, y = 271, width = 22, height = 32}, -- 6. char forward walk 4
+  {x = 6, y = 333, width = 36, height = 32}, -- 7. char side run 1
+  {x = 70, y = 335, width = 36, height = 32}, -- 8. char side run 2
+  {x = 134, y = 333, width = 38, height = 32}, -- 9. char side run 3
+  {x = 198, y = 335, width = 38, height = 32}, -- 10. char side run 4
+  {x = 14, y = 397, width = 36, height = 32}, -- 11. char right 1
+  {x = 78, y = 399, width = 36, height = 32}, -- 12. char right 2
+  {x = 140, y = 397, width = 38, height = 32}, -- 13. char right 3
+  {x = 204, y = 399, width = 38, height = 32}, -- 14. char right 4
+}
+
+squirtle:
+{
+  {x = 39, y = 113, width = 76, height = 78}, -- 1. full squirtle
+  {x = 185, y = 93, width = 42, height = 34}, -- 2. mini squirtle sprite
+  {x = 17, y = 267, width = 22, height = 30}, -- 3. squirtle forward walk 1
+  {x = 81, y = 269, width = 22, height = 30}, -- 4. squirtle forward walk 2
+  {x = 145, y = 267, width = 22, height = 30}, -- 5. squirtle forward walk 3
+  {x = 209, y = 269, width = 22, height = 30}, -- 6. squirtle forward walk 4
+  {x = 17, y = 331, width = 30, height = 30}, -- 7. squirtle side run 1
+  {x = 81, y = 333, width = 30, height = 30}, -- 8. squirtle side run 2
+  {x = 145, y = 331, width = 30, height = 30}, -- 9. squirtle side run 3
+  {x = 209, y = 333, width = 30, height = 30}, -- 10. squirtle side run 4
+  {x = 11, y = 395, width = 30, height = 30}, -- 11. squirtle right 1
+  {x = 75, y = 397, width = 30, height = 30}, -- 12. squirtle right 2
+  {x = 139, y = 395, width = 30, height = 30}, -- 13. squirtle right 3
+  {x = 203, y = 397, width = 30, height = 30}, -- 14. squirtle right 4
+}
+
+ashSheet:
+{
+  {x = 6, y = 9, width = 16, height = 19}, -- 1. ash forward 1
+  {x = 24, y = 9, width = 16, height = 19}, -- 2. ash forward 2
+  {x = 41, y = 9, width = 16, height = 19}, -- 3. ash forward 3
+  {x = 59, y = 9, width = 16, height = 19}, -- 4. ash left 1
+  {x = 77, y = 10, width = 16, height = 18}, -- 5. ash left 2
+  {x = 94, y = 10, width = 16, height = 18}, -- 6. ash left 3
+  {x = 113, y = 9, width = 16, height = 19}, -- 7. ash up 1
+  {x = 132, y = 9, width = 16, height = 19}, -- 8. ash up 2
+  {x = 150, y = 9, width = 16, height = 19}, -- 9. ash up 3
+  {x = 168, y = 9, width = 16, height = 19}, -- 10. ash right 1
+  {x = 186, y = 10, width = 16, height = 18}, -- 11. ash right 2
+  {x = 203, y = 10, width = 16, height = 18}, -- 12. ash right 3
+  {x = 138, y = 139, width = 18, height = 24}, -- 13. surf forward
+  {x = 138, y = 171, width = 18, height = 25}, -- 14. surf up
+  {x = 138, y = 203, width = 20, height = 23}, -- 15. surf left
+  {x = 137, y = 234, width = 20, height = 23}, -- 16. surf right
+}
