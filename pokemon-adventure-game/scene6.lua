@@ -20,8 +20,8 @@ function scene:create( event )
 
 
    local background = display.newImage("images/map3wateronly.PNG")
-   background.x = display.contentCenterX
-   background.y = display.contentCenterY
+   background.x = display.contentCenterX + 300
+   background.y = display.contentCenterY*0.25
 	world:insert(background)
 
 
@@ -33,6 +33,73 @@ function scene:create( event )
       }
    }
 
+   local obstacleFull = "images/map3obstacles.png"
+   local obstaclesOutline = graphics.newOutline(2, obstacleFull)
+   local obstacle = display.newImage(obstacleFull)
+   obstaclesOutline.alpha = 0
+   --obstaclesOutline = graphics.newOutline(2, obsSheet, 2);
+
+   obstacle.x = background.x
+   obstacle.y = background.y
+
+   physics.addBody(obstacle, "static", {outline = obstaclesOutline, density=500})
+    world:insert(obstacle)
+
+    local obstacleFull2 = "images/map3obstacles2.png"
+    local obstaclesOutline2 = graphics.newOutline(2, obstacleFull2)
+    local obstacle2 = display.newImage(obstacleFull2)
+    --obstaclesOutline = graphics.newOutline(2, obsSheet, 2);
+ 
+    obstacle2.x = background.x
+    obstacle2.y = background.y
+ 
+    physics.addBody(obstacle2, "static", {outline = obstaclesOutline2, density=500})
+     world:insert(obstacle2)
+
+     local obstacleFull3 = "images/map3obstacles3.png"
+     local obstaclesOutline3 = graphics.newOutline(2, obstacleFull3)
+     
+     local obstacle3 = display.newImage(obstacleFull3)
+     --obstaclesOutline = graphics.newOutline(2, obsSheet, 2);
+  
+     obstacle3.x = background.x
+     obstacle3.y = background.y
+  
+     physics.addBody(obstacle3, "static", {outline = obstaclesOutline3, density=500})
+      world:insert(obstacle3)
+      
+      local obstacleFull4 = "images/map3obstacles4.png"
+      local obstaclesOutline4 = graphics.newOutline(2, obstacleFull4)
+      local obstacle4 = display.newImage(obstacleFull4)
+      --obstaclesOutline = graphics.newOutline(2, obsSheet, 2);
+   
+      obstacle4.x = background.x
+      obstacle4.y = background.y
+   
+      physics.addBody(obstacle4, "static", {outline = obstaclesOutline4, density=500})
+       world:insert(obstacle4)
+
+       local obstacleFull5 = "images/map3obstacles5.png"
+       local obstaclesOutline5 = graphics.newOutline(2, obstacleFull5)
+       local obstacle5 = display.newImage(obstacleFull5)
+       --obstaclesOutline = graphics.newOutline(2, obsSheet, 2);
+    
+       obstacle5.x = background.x
+       obstacle5.y = background.y
+    
+       physics.addBody(obstacle5, "static", {outline = obstaclesOutline5, density=500})
+        world:insert(obstacle5)
+    
+        local obstacleFull6 = "images/map3obstacles6.png"
+        local obstaclesOutline6 = graphics.newOutline(2, obstacleFull6)
+        local obstacle6 = display.newImage(obstacleFull6)
+        --obstaclesOutline = graphics.newOutline(2, obsSheet, 2);
+     
+        obstacle6.x = background.x
+        obstacle6.y = background.y
+     
+        physics.addBody(obstacle6, "static", {outline = obstaclesOutline6, density=500})
+         world:insert(obstacle6)
 
    playerChar = player:new({x=display.contentCenterX, y=display.contentCenterY})--display.newCircle( display.contentCenterX, display.contentCenterY, 25 )
    playerChar:spawn()
