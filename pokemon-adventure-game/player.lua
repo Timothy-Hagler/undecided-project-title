@@ -61,8 +61,6 @@ function Player:StopMoving()
 end
 
 function Player:move(xvel, yvel)
-    print("yvel " .. yvel)
-    print("xvel " .. xvel)
     if (xvel < 0 and math.abs(xvel) > math.abs(yvel)) then
         self.sprite:setSequence("left")
     elseif (xvel > 0 and math.abs(xvel) > math.abs(yvel)) then
