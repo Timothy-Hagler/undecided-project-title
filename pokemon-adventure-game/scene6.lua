@@ -105,8 +105,6 @@ function scene:create( event )
    playerChar:spawn()
    sceneGroup:insert(playerChar.shape)
 
-
-   
     sceneGroup:insert(world)
 
    musicTrack = audio.loadStream( "audio/caveMusic.mp3")
