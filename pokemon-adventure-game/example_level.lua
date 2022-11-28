@@ -67,10 +67,10 @@ function scene:create( event )
 			local xvel, yvel
 			xvel = (event.x - display.contentCenterX)/(display.contentWidth/2) * player_velocity_scale
 			yvel = (event.y - display.contentCenterY)/(display.contentHeight/2) * player_velocity_scale
-			playerChar.shape:setLinearVelocity(xvel, yvel)
+         playerChar:move(xvel, yvel)
 
 		elseif ( event.phase == "ended" ) then
-			playerChar.shape:setLinearVelocity(0, 0)
+         playerChar:StopMoving()
 		end
 	end
 	
