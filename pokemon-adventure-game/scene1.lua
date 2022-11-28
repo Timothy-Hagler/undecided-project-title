@@ -63,7 +63,7 @@ function scene:create( event )
    -- Initialize the scene here.
    -- Example: add display objects to "sceneGroup", add touch listeners, etc.
 
-   local background = display.newImage('menu.png')
+   local background = display.newImage("images/menu.png")
    background.x = display.contentCenterX
    background.y = display.contentCenterY
    sceneGroup:insert(background)
@@ -88,7 +88,7 @@ function scene:create( event )
    sceneGroup:insert(myText)
    myText:addEventListener("tap", exit)
 
-   musicTrack = audio.loadStream( "menuMusic.mp3")
+   musicTrack = audio.loadStream( "audio/menuMusic.mp3")
 
 end
  

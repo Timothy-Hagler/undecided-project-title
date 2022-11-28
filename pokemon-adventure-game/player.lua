@@ -13,7 +13,7 @@ function Player:spawn()
     self.shape.pp = self;  -- parent object
     self.shape.tag = self.tag; -- player
     self.shape:setFillColor (1,1,1);
-    physics.addBody(self.shape, "dynamic", {bounciness=0, radius=15}); 
+    physics.addBody(self.shape, "dynamic", {bounciness=0, radius=15, linearDamping = 10});
 end
 
 function Player:InitiateBattle()
@@ -24,20 +24,8 @@ function Player:StopMoving()
     self.shape:setLinearVelocity(0, 0)
 end
 
-function Player:move(event)
-    self:StopMoving()
-
-    if (event.x < self.shape.x) then
-        event.x = -event.x
-    end
-
-    if (event.y < self.shape.y) then
-        event.y = -event.y
-    end
-
-    self.shape:applyForce(event.x / math.abs(event.x), event.y / math.abs(event.y), self.shape.x, self.shape.y)
-    self.prevXForce = event.x / math.abs(event.x)
-    self.prevYForce = event.y / math.abs(event.y)
+function Player:move(xvel, yvel)
+    self.shape:setLinearVelocity(xvel, yvel)	-- #TODO: changing this to impulse-based motion would work better for boulder collision, but this will work ok as-is
 end
 
 return Player

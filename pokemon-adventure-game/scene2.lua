@@ -17,12 +17,12 @@ function scene:create( event )
  
    local sceneGroup = self.view
  
-   local background = display.newImage('creditsScreen.png')
+   local background = display.newImage('images/creditsScreen.png')
    background.x = display.contentCenterX
    background.y = display.contentCenterY
    sceneGroup:insert(background)
 
-   local button = display.newImage('back.png')
+   local button = display.newImage('images/back.png')
    button.x = 270
    button.y = 45
    sceneGroup:insert(button)
