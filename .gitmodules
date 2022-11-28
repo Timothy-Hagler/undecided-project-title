@@ -1,0 +1,3 @@
+[submodule "dynacam"]
+	path = pokemon-adventure-game/lib/dynacam
+	url = https://github.com/Zetosoft/dynacam.git
