@@ -46,7 +46,7 @@ function scene:create( event )
 
    playerChar = player:new({x=display.contentCenterX, y=display.contentCenterY})--display.newCircle( display.contentCenterX, display.contentCenterY, 25 )
    playerChar:spawn()
-   sceneGroup:insert(playerChar.shape)
+   sceneGroup:insert(playerChar.sprite)
 
 
    local int1Sheet = graphics.newImageSheet("images/RouteInteractables1.png", Options) 
@@ -128,7 +128,6 @@ function scene:create( event )
          playerChar:move(xvel, yvel)
 
 		elseif ( event.phase == "ended" ) then
-			playerChar.shape:setLinearVelocity(0, 0)
          playerChar:StopMoving()
 		end
 	end
@@ -147,7 +146,7 @@ function scene:create( event )
 	local function onPlayerCollision( self, event )
       transition.cancel( event.target )
 
-		print( "player collision with " .. event.target.tag )	-- #TODO: Assign this for puzzle goals and one-way terrain
+	--	print( "player collision with " .. event.target.tag )	-- #TODO: Assign this for puzzle goals and one-way terrain
       if ( event.phase == "began" ) then
          print("hit")
       elseif ( event.phase == "ended" ) then
@@ -156,8 +155,8 @@ function scene:create( event )
    end
 
    Runtime:addEventListener("touch", movePlayer)
-	playerChar.shape.collision = onPlayerCollision
-   playerChar.shape:addEventListener("collision")
+	playerChar.sprite.collision = onPlayerCollision
+   playerChar.sprite:addEventListener("collision")
    --Runtime:addEventListener("collision", onGlobalCollision)	-- global collision
 end
 
@@ -171,21 +170,24 @@ function scene:show( event )
 		-- Camera Tracking
 		--------------------------------
 		camera = perspective.createView(2)	-- #DEBUG1
-		camera:add(playerChar.shape, 1) -- Add player to layer 1 of the camera	-- #DEBUG1
+		camera:add(playerChar.sprite, 1) -- Add player to layer 1 of the camera	-- #DEBUG1
 		camera:appendLayer()	-- add layer 0 in front of the camera	-- #DEBUG1
 		
 		camera:add(world, 2)	-- #DEBUG1
 		camera:setParallax(0, 1) -- set parallax for each layer in descending order	-- #DEBUG1
 		
 		camera.damping = 10 -- A bit more fluid tracking
-		camera:setFocus(playerChar.shape) -- Set the focus to the player
+		camera:setFocus(playerChar.sprite) -- Set the focus to the player
 		print("Layers: "..camera:layerCount())
    elseif ( phase == "did" ) then
       -- Called when the scene is now on screen.
       -- Insert code here to make the scene come alive.
       -- Example: start timers, begin animation, play audio, etc.
 		camera:track() -- Begin auto-tracking
-      audio.play( musicTrack, { channel=1, loops=-1 } )
+      
+
+      ------- uncomment
+      --audio.play( musicTrack, { channel=1, loops=-1 } )
    end
 end
 
