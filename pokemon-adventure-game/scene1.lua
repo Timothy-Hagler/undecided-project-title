@@ -138,7 +138,7 @@ function scene:show( event )
       -- Called when the scene is still off screen (but is about to come on screen).
 
    elseif ( phase == "did" ) then
-         audio.play( musicTrack, { channel=1, loops=-1 } )
+         --audio.play( musicTrack, { channel=1, loops=-1 } )
 
    end
 end
