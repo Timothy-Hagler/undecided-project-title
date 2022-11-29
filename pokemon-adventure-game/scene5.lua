@@ -154,9 +154,14 @@ function scene:create( event )
       end
    end
 
+   local function updatePlayerRotation()
+      playerChar.sprite.rotation = 0
+   end
+
    Runtime:addEventListener("touch", movePlayer)
 	playerChar.sprite.collision = onPlayerCollision
    playerChar.sprite:addEventListener("collision")
+   timer.performWithDelay(0,updatePlayerRotation,-1)
    --Runtime:addEventListener("collision", onGlobalCollision)	-- global collision
 end
 

@@ -22,7 +22,7 @@ local function showGame()
       effect = "fade",
       time = 500
    }
-   composer.gotoScene("scene5", options)
+   composer.gotoScene("scene6", options)
 
 end
 

@@ -1,4 +1,4 @@
-local Player = {tag="player", HP=1, xPos=0, yPos=0, prevXForce=0, prevYForce=0};
+local Player = {tag="player", HP=1, xPos=0, yPos=0, prevXForce=0, prevYForce=0, inWater=false};
 
 local options =
 {
@@ -48,7 +48,12 @@ function Player:spawn()
     self.sprite.xScale, self.sprite.yScale = 1.75, 1.75
     self.sprite.x, self.sprite.y = self.x, self.y
     self.sprite.pp = self;  -- parent object
-    physics.addBody(self.sprite, "kinematic", {bounciness=0, linearDamping = 10});
+    physics.addBody(self.sprite, "dynamic", {bounciness=0, linearDamping = 10});
+
+    if (self.inWater) then
+        self.sprite:setSequence("surfForward")
+    end
+
 end
 
 function Player:InitiateBattle()
@@ -61,26 +66,30 @@ function Player:StopMoving()
 end
 
 function Player:move(xvel, yvel)
-    print("yvel " .. yvel)
-    print("xvel " .. xvel)
-    if (xvel < 0 and math.abs(xvel) > math.abs(yvel)) then
-        self.sprite:setSequence("left")
-    elseif (xvel > 0 and math.abs(xvel) > math.abs(yvel)) then
-        self.sprite:setSequence("right")
-    elseif (yvel < 0 and math.abs(xvel) < math.abs(yvel)) then
-        self.sprite:setSequence("up")
-    elseif (yvel > 0 and math.abs(xvel) < math.abs(yvel)) then
-        self.sprite:setSequence("forward")
+    if (self.inWater == false) then
+        if (xvel < 0 and math.abs(xvel) > math.abs(yvel)) then
+            self.sprite:setSequence("left")
+        elseif (xvel > 0 and math.abs(xvel) > math.abs(yvel)) then
+            self.sprite:setSequence("right")
+        elseif (yvel < 0 and math.abs(xvel) < math.abs(yvel)) then
+            self.sprite:setSequence("up")
+        elseif (yvel > 0 and math.abs(xvel) < math.abs(yvel)) then
+            self.sprite:setSequence("forward")
+        end
+    else
+        if (xvel < 0 and math.abs(xvel) > math.abs(yvel)) then
+            self.sprite:setSequence("surfLeft")
+        elseif (xvel > 0 and math.abs(xvel) > math.abs(yvel)) then
+            self.sprite:setSequence("surfRight")
+        elseif (yvel < 0 and math.abs(xvel) < math.abs(yvel)) then
+            self.sprite:setSequence("surfUp")
+        elseif (yvel > 0 and math.abs(xvel) < math.abs(yvel)) then
+            self.sprite:setSequence("surfForward")
+        end
+
     end
     self.sprite:play()
     self.sprite:setLinearVelocity(xvel, yvel)	-- #TODO: changing this to impulse-based motion would work better for boulder collision, but this will work ok as-is
 end
-
-
-function Player:update()
-    self.sprite.rotation = 0
-end
-
-timer.performWithDelay(0,update,-1)
 
 return Player
