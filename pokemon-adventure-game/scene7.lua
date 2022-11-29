@@ -3,6 +3,7 @@ local composer = require( "composer" )
 local perspective = require( "lib.perspective.perspective" )
 local scene = composer.newScene()
 local player = require("player")
+local obstacle = require( "obstacle" )
 local musicTrack
  
 local camera, world, playerChar
@@ -169,9 +170,23 @@ function scene:create( event )
    playerChar:spawn()
 
    sceneGroup:insert(playerChar.sprite)
-   sceneGroup:insert(world)
+   
 
-   musicTrack = audio.loadStream( "audio/caveMusic.mp3")
+ --[[  local boulderOptions = {
+    frames = {
+    {x = 0, y = 0, 
+    width = 27, height = 28}
+    }
+ }
+  local boulderSheet = graphics.newImageSheet('images/boulder.png', boulderOptions)
+  local boulderOutline = graphics.newOutline(2, boulderSheet, 1)
+  local boulder = obstacle:new({ img=boulderSheet, imgIdx=1, outline=boulderOutline, x=200, y=322 })
+  boulder:spawn()
+  world:insert(boulder.sprite) ]]--
+
+  sceneGroup:insert(world)
+
+   musicTrack = audio.loadStream( "audio/gymMusic.mp3")
 
 
 	-- Move the world wrt. the player to simulate player movement
