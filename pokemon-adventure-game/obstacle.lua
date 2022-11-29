@@ -1,4 +1,5 @@
-local Obstacle = {tag="Obstacle", img=nil, imgIdx=nil, outline=nil, x = 0, y = 0, bodyType="dynamic", collisionType="all"};
+local Obstacle = {tag="Obstacle", img=nil, imgIdx=nil, outline=nil, x = 0, y = 0, 
+	bodyType="dynamic", collisionType="all", bounce=0, triggerFxn = nil};
 local aboveCollisionOnly, belowCollisionOnly
 
 function Obstacle:new (o)    --constructor
@@ -19,9 +20,9 @@ function Obstacle:spawn()
 	self.sprite.pp = self;  -- parent object
 
 	if ( self.bodyType == "static") then 
-		physics.addBody(self.sprite, "static", {outline=self.outline, bounciness=0} );	
+		physics.addBody(self.sprite, "static", {outline=self.outline, bounce=self.bounce} );	
 	else
-		physics.addBody(self.sprite, self.bodyType, {outline=self.outline, bounciness=0} );
+		physics.addBody(self.sprite, self.bodyType, {outline=self.outline, bounce=self.bounce} );
 		self.sprite.linearDamping = 3.5
 		self.sprite.angularDamping = 3.5
 	end
@@ -32,6 +33,11 @@ function Obstacle:spawn()
 	elseif ( self.collisionType == "below" ) then
 		self.sprite.preCollision = belowCollisionOnly
 		self.sprite:addEventListener( "preCollision" )
+	end
+
+	if self.triggerFxn then
+		self.sprite.collision = self.triggerFxn
+		self.sprite:addEventListener("collision")
 	end
 end
 
@@ -67,8 +73,12 @@ function belowCollisionOnly( self, event)
 
 end
 
-function sceneTrigger( self, event )
+function genericTrigger( self, event )
 	print("Placeholder!")
+end
+
+function moveToScene( sceneName )
+
 end
 
 return Obstacle
