@@ -88,7 +88,6 @@ function Player:move(xvel, yvel, phase)
 		end
 	end
 	if (phase == "began" or (self.sprite.prevSequence ~= self.sprite.seq) ) then
-		print("New Sequence: "..self.sprite.seq)
 		self.sprite:setSequence(self.sprite.seq)
 		self.sprite:play()
 	end
