@@ -203,8 +203,7 @@ function scene:show( event )
 		camera:track() -- Begin auto-tracking
       
 
-      ------- uncomment
-      --audio.play( musicTrack, { channel=1, loops=-1 } )
+      audio.play( musicTrack, { channel=1, loops=-1 } )
    end
 end
 
