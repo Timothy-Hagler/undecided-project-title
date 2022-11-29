@@ -1,5 +1,6 @@
 -- Main Menu Screen
 local composer = require( "composer" )
+local csv = require("csv")
 local scene = composer.newScene()
 
 local musicTrack
@@ -14,6 +15,37 @@ local musicTrack
 ---------------------------------------------------------------------------------
 
 
+local function createSavedGame()
+   local path = system.pathForFile("save.csv", system.DocumentsDirectory)
+   local newFile = io.open(path, "w")
+   newFile:write('scene' .. ',' .. 'health')
+   newFile:write('\n')
+   newFile:write('scene5' .. ',' .. '100')
+   io.close(newFile)
+   return newFile
+end
+
+local function getSavedData(save, saveFile)
+   for record in saveFile:lines() do
+      save.scene = record.scene
+   end
+end
+
+local function getSavedGame()
+   local path = system.pathForFile("save.csv", system.DocumentsDirectory)
+   local saveFile = csv.open(path, {separator = ",", header = true})
+   local save = {}
+   if (saveFile == nil) then
+      createSavedGame()
+      saveFile = csv.open(path, {separator = ",", header = true})
+      getSavedData(save, saveFile)
+   else
+      getSavedData(save, saveFile)
+   end
+
+   return save
+end
+
 local function showGame()
 
     audio.stop( 1 )
@@ -22,7 +54,8 @@ local function showGame()
       effect = "fade",
       time = 500
    }
-   composer.gotoScene("scene6", options)
+   local save = getSavedGame()
+   composer.gotoScene(save.scene, options)
 
 end
 
