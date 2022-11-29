@@ -86,7 +86,7 @@ function Player:move(xvel, yvel, phase)
 			elseif (yvel < 0 and math.abs(xvel) < math.abs(yvel)) then
 				self.sprite.seq = "surfUp"
 			elseif (yvel > 0 and math.abs(xvel) < math.abs(yvel)) then
-				self.sprite.seq = "surfDown"
+				self.sprite.seq = "surfForward"
 			end
 		end
 		if (phase == "began" or (self.sprite.prevSequence ~= self.sprite.seq) ) then
