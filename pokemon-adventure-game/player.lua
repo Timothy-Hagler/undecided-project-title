@@ -48,7 +48,7 @@ function Player:spawn()
     self.sprite.xScale, self.sprite.yScale = 1.75, 1.75
     self.sprite.x, self.sprite.y = self.x, self.y
     self.sprite.pp = self;  -- parent object
-    physics.addBody(self.sprite, "kinematic", {bounciness=0, linearDamping = 10});
+    physics.addBody(self.sprite, "dynamic", {bounciness=0, linearDamping = 10});
 
     if (self.inWater) then
         self.sprite:setSequence("surfForward")
@@ -91,12 +91,5 @@ function Player:move(xvel, yvel)
     self.sprite:play()
     self.sprite:setLinearVelocity(xvel, yvel)	-- #TODO: changing this to impulse-based motion would work better for boulder collision, but this will work ok as-is
 end
-
-
-function Player:update()
-    self.sprite.rotation = 0
-end
-
-timer.performWithDelay(0,update,-1)
 
 return Player
