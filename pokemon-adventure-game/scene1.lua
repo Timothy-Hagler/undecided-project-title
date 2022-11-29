@@ -27,6 +27,8 @@ end
 local function getSavedData(save, saveFile)
    for record in saveFile:lines() do
       save.scene = record.scene
+      save.health = record.health
+      save.lives = record.lives
    end
 end
 
@@ -38,8 +40,10 @@ local function getSavedGame()
       createSavedGame()
       saveFile = csv.open(path, {separator = ",", header = true})
       getSavedData(save, saveFile)
+      saveFile:close()
    else
       getSavedData(save, saveFile)
+      saveFile:close()
    end
 
    return save
