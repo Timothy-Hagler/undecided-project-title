@@ -209,7 +209,7 @@ function scene:show( event )
       -- Insert code here to make the scene come alive.
       -- Example: start timers, begin animation, play audio, etc.
 		camera:track() -- Begin auto-tracking
-      --audio.play( musicTrack, { channel=1, loops=-1 } )
+      audio.play( musicTrack, { channel=1, loops=-1 } )
 
    end
 end
