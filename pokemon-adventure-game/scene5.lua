@@ -110,6 +110,23 @@ function scene:create( event )
 
    physics.addBody(boulderGoal, "dynamic", {outline = boulderGoalOutline});
 
+   local opt = 
+   {
+      frames = {
+         {x = 133, y = 39, width = 46, height = 52},
+         {x = 193, y = 38, width = 46, height = 52},
+         {x = 258, y = 37, width = 46}  
+      }
+   }
+
+   local charSheet = graphics.newImageSheet("charmander.png", opt)
+
+   -- add random pokemon enemy generator
+   -- create a sprite object and then do a physics.addBody on int1Sheet
+   -- make the enemy a kinematic object that randomy attacks and defends
+      -- grab the movement from the scene5 and add it in the overlay scene
+
+   
    sceneGroup:insert(boulderGoal)
 	world:insert(boulderGoal)
 

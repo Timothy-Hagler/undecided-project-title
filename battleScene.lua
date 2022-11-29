@@ -38,10 +38,6 @@ function scene:create( event )
    button:addEventListener("tap", backButton)
 
 
-
-
-
-
 end
  
 -- "scene:show()"

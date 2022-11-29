@@ -11,16 +11,20 @@ local enemy, playerChar, background
 -- diminish health bar by level of pokemon
 -- allow health bar puzzle bonus OR allow player to pick up randomly spawned potions for health boost
 -- add pause button to call help scene
+-- if the player dies from the enemy, dimish 1 life until life == 0 , gameover and return to start screen?
  
-local function backButton()
+local function playerDeath()
 
-   local options = {
-      effect = "fade",
-      time = 500
-   }
-   composer.gotoScene("scene1", options)
+   if(numOfLives == 0) then
+      local options = {
+         effect = "fade",
+         time = 500
+      }
+
+      composer.gotoScene("mainmenu", options)
 
 end
+
 -- "scene:create()"
 function scene:create( event )
  
