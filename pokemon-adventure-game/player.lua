@@ -67,24 +67,24 @@ end
 function Player:move(xvel, yvel, phase)
 	self.sprite.prevSequence = self.sprite.seq
 	if (self.inWater == false) then
-		if (xvel < 0 and math.abs(xvel) > math.abs(yvel)) then
-			self.sprite.seq = "left"
-		elseif (xvel > 0 and math.abs(xvel) > math.abs(yvel)) then
-			self.sprite.seq = "right"
-		elseif (yvel < 0 and math.abs(xvel) < math.abs(yvel)) then
-			self.sprite.seq = "up"
-		elseif (yvel > 0 and math.abs(xvel) < math.abs(yvel)) then
-			self.sprite.seq = "forward"
-		end
+        if (xvel < 0 and math.abs(xvel) > math.abs(yvel)) then
+            self.sprite:setSequence("left")
+        elseif (xvel > 0 and math.abs(xvel) > math.abs(yvel)) then
+            self.sprite:setSequence("right")
+        elseif (yvel < 0 and math.abs(xvel) < math.abs(yvel)) then
+            self.sprite:setSequence("up")
+        elseif (yvel > 0 and math.abs(xvel) < math.abs(yvel)) then
+            self.sprite:setSequence("forward")
+        end
 	else
-		if (xvel < 0 and math.abs(xvel) > math.abs(yvel)) then
-			self.sprite.seq = "surfLeft"
-		elseif (xvel > 0 and math.abs(xvel) > math.abs(yvel)) then
-			self.sprite.seq = "surfRight"
-		elseif (yvel < 0 and math.abs(xvel) < math.abs(yvel)) then
-			self.sprite.seq = "surfUp"
-		elseif (yvel > 0 and math.abs(xvel) < math.abs(yvel)) then
-			self.sprite.seq = "surfDown"
+        if (xvel < 0 and math.abs(xvel) > math.abs(yvel)) then
+            self.sprite:setSequence("surfLeft")
+        elseif (xvel > 0 and math.abs(xvel) > math.abs(yvel)) then
+            self.sprite:setSequence("surfRight")
+        elseif (yvel < 0 and math.abs(xvel) < math.abs(yvel)) then
+            self.sprite:setSequence("surfUp")
+        elseif (yvel > 0 and math.abs(xvel) < math.abs(yvel)) then
+            self.sprite:setSequence("surfForward")
 		end
 	end
 	if (phase == "began" or (self.sprite.prevSequence ~= self.sprite.seq) ) then
