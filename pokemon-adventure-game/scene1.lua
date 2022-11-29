@@ -18,11 +18,10 @@ local musicTrack
 local function createSavedGame()
    local path = system.pathForFile("save.csv", system.DocumentsDirectory)
    local newFile = io.open(path, "w")
-   newFile:write('scene' .. ',' .. 'health')
+   newFile:write('scene' .. ',' .. 'health' .. ',' .. 'lives')
    newFile:write('\n')
-   newFile:write('scene5' .. ',' .. '100')
+   newFile:write('scene5' .. ',' .. '100' .. ',' .. '3')
    io.close(newFile)
-   return newFile
 end
 
 local function getSavedData(save, saveFile)
