@@ -18,6 +18,11 @@ function scene:create( event )
    physics.setGravity(0,0)
    physics.setDrawMode("hybrid")
 
+   local backgroundWater = display.newImage("images/map3smallwater.png")
+   backgroundWater.x = display.contentCenterX
+   backgroundWater.y = display.contentCenterY
+   backgroundWater.xScale, backgroundWater.yScale = 50, 50
+   world:insert(backgroundWater)
 
    local background = display.newImage("images/map3wateronly.PNG")
    background.x = display.contentCenterX + 300
@@ -101,11 +106,12 @@ function scene:create( event )
         physics.addBody(obstacle6, "static", {outline = obstaclesOutline6, density=500})
          world:insert(obstacle6)
 
+
    playerChar = player:new({x=display.contentCenterX, y=display.contentCenterY, inWater=true})
    playerChar:spawn()
-   sceneGroup:insert(playerChar.sprite)
 
-    sceneGroup:insert(world)
+   sceneGroup:insert(playerChar.sprite)
+   sceneGroup:insert(world)
 
    musicTrack = audio.loadStream( "audio/caveMusic.mp3")
 
