@@ -8,6 +8,16 @@ local musicTrack
 local camera, world, playerChar
 local player_velocity_scale = 150
 worldTable = {}
+
+local function updateSavedGame()
+   local path = system.pathForFile("save.csv", system.DocumentsDirectory)
+   local updatedFile = io.open(path, "w+")
+   updatedFile:write('scene' .. ',' .. 'health' .. ',' .. 'lives')
+   updatedFile:write('\n')
+   updatedFile:write('scene6' .. ',' .. '100' .. ',' .. '3')
+   io.close(updatedFile)
+end
+
 -- "scene:create()"
 function scene:create( event )
  
@@ -160,6 +170,7 @@ function scene:create( event )
    playerChar.sprite:addEventListener("collision")
 
    timer.performWithDelay(0,updatePlayerRotation,-1)
+   updateSavedGame()
    --Runtime:addEventListener("collision", onGlobalCollision)	-- global collision
 end
 
@@ -199,6 +210,7 @@ function scene:hide( event )
  
    if ( phase == "will" ) then
 		audio.stop( 1 )
+      updateSavedGame()
 
    elseif ( phase == "did" ) then
       -- Called immediately after scene goes off screen.
@@ -210,6 +222,7 @@ end
 function scene:destroy( event )
  
    local sceneGroup = self.view
+   updateSavedGame()
  
    -- Called prior to the removal of scene's view ("sceneGroup").
    -- Insert code here to clean up the scene.

@@ -8,6 +8,16 @@ local musicTrack
 local camera, world, playerChar
 local player_velocity_scale = 150
 worldTable = {}
+
+local function updateSavedGame()
+   local path = system.pathForFile("save.csv", system.DocumentsDirectory)
+   local updatedFile = io.open(path, "w+")
+   updatedFile:write('scene' .. ',' .. 'health' .. ',' .. 'lives')
+   updatedFile:write('\n')
+   updatedFile:write('scene7' .. ',' .. '100' .. ',' .. '3')
+   io.close(updatedFile)
+end
+
 -- "scene:create()"
 function scene:create( event )
  
@@ -18,11 +28,17 @@ function scene:create( event )
    physics.setGravity(0,0)
    physics.setDrawMode("hybrid")
 
+   local hugeBackground = display.newImage("images/gymMap.jpg")
+   hugeBackground.x = display.contentCenterX
+   hugeBackground.y = display.contentCenterY*0.01 - 45
+   hugeBackground.xScale, hugeBackground.yScale = 50, 50
+    world:insert(hugeBackground)
 
    local background = display.newImage("images/gymMap.jpg")
    background.x = display.contentCenterX
    background.y = display.contentCenterY*0.01 - 45
     world:insert(background)
+
 
 
 	local Options = {
@@ -120,7 +136,36 @@ function scene:create( event )
         physics.addBody(obstacle7, "static", {outline = obstaclesOutline7, density=500})
          world:insert(obstacle7)
 
-   playerChar = player:new({x=display.contentCenterX, y=display.contentCenterY, inWater=true})
+
+    local bulbOptions =
+    {
+        frames = {
+            {x = 39, y = 119, width = 70, height = 66}, -- 1. full bulb
+            {x = 183, y = 91, width = 40, height = 34}, -- 2. mini bulb sprite
+            {x = 365, y = 197, width = 51, height = 36}, -- 3. bulb back (color from background might be included oops
+            {x = 12, y = 271, width = 30, height = 32}, -- 4. bulb forward walk 1
+            {x = 76, y = 273, width = 30, height = 32}, -- 5. bulb forward walk 2
+            {x = 140, y = 271, width = 30, height = 32}, -- 6. bulb forward walk 3
+            {x = 204, y = 273, width = 30, height = 32}, -- 7. bulb forward walk 4
+            {x = 8, y = 335, width = 38, height = 30}, -- 8. bulb side run 1
+            {x = 72, y = 337, width = 38, height = 30}, -- 9. bulb side run 2
+            {x = 136, y = 335, width = 38, height = 30}, -- 10. bulb side run 3
+            --{x = , y = , width = 38, height = 30}, -- 11. bulb side run 4
+            {x = 10, y = 399, width = 38, height = 30}, -- 12. bulb right 1
+            {x = 74, y = 401, width = 38, height = 30}, -- 13. bulb right 2
+            {x = 138, y = 399, width = 38, height = 30}, -- 14. bulb right 3
+            {x = 202, y = 401, width = 38, height = 30}, -- 15. bulb right 4
+        }
+    }
+
+    local bulbSheet = graphics.newImageSheet("spritesheets/bulbsprites.png", bulbOptions)
+    local bulbasaur = display.newImage(bulbSheet, 4)
+    bulbasaur.x = background.x
+    bulbasaur.y = background.y - 275
+	physics.addBody(bulbasaur, "static");
+    world:insert(bulbasaur)
+
+   playerChar = player:new({x=display.contentCenterX, y=display.contentCenterY, inWater=false})
    playerChar:spawn()
 
    sceneGroup:insert(playerChar.sprite)
@@ -173,6 +218,7 @@ function scene:create( event )
    playerChar.sprite:addEventListener("collision")
 
    timer.performWithDelay(0,updatePlayerRotation,-1)
+   updateSavedGame()
    --Runtime:addEventListener("collision", onGlobalCollision)	-- global collision
 end
 
@@ -212,6 +258,7 @@ function scene:hide( event )
  
    if ( phase == "will" ) then
 		audio.stop( 1 )
+        updateSavedGame()
 
    elseif ( phase == "did" ) then
       -- Called immediately after scene goes off screen.
@@ -223,6 +270,7 @@ end
 function scene:destroy( event )
  
    local sceneGroup = self.view
+   updateSavedGame()
  
    -- Called prior to the removal of scene's view ("sceneGroup").
    -- Insert code here to clean up the scene.
