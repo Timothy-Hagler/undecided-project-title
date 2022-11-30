@@ -42,8 +42,8 @@ function scene:create( event )
 
    local playerHealthBar = widget.newProgressView(
       {
-         left = display.contentCenterX - 120,
-         top = display.contentCenterY - 200,
+         left = display.contentCenterX - 100,
+         top = display.contentCenterY + 40,
          width = 50,
          isAnimated = true
       }
@@ -53,8 +53,8 @@ function scene:create( event )
 
    local enemyHealthBar = widget.newProgressView(
       {
-         left = display.contentCenterX + 100,
-         top = display.contentCenterY - 200,
+         left = display.contentCenterX + 60,
+         top = display.contentCenterY - 180,
          width = 50,
          isAnimated = true 
       }
@@ -202,7 +202,7 @@ local attackButton = widget.newButton(
       label = "ATTACK",
       width = 100,
       cornerRadius = 9,
-      fillColor = {default={0,1,0,1}, over={1,1,0.4,0.2}},
+      fillColor = {default={1,0,0,1}, over={1,1,1,1}},
       onEvent = handleAttackButtonEvent
    }
 )
@@ -216,7 +216,7 @@ local defendButton = widget.newButton(
       label = "DEFEND",
       width = 100,
       cornerRadius = 9,
-      fillColor = {default={0,1,0,1}, over={1,1,0.4,0.2}},
+      fillColor = {default={0,0,1,1}, over={1,1,1,1}},
       onEvent = handleDefendButtonEvent
    }
 )
