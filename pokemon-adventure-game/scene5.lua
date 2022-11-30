@@ -38,13 +38,22 @@ function scene:create( event )
 	world = display.newGroup()
 
 
-   local function goToNextScene()
+   function scene:goToNextScene()
 
       local options = {
          effect = "fade",
          time = 500
       }
       composer.gotoScene("scene6", options)
+   end
+
+   function scene:goToPreviousScene()
+
+      local options = {
+         effect = "fade",
+         time = 500
+      }
+      composer.gotoScene("scene5", options)
    end
 
    local background = display.newImage('images/route.png')

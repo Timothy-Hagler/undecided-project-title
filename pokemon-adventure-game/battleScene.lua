@@ -2,7 +2,7 @@ local composer = require( "composer" )
 local widget = require("widget")
 local player = require("player")
 local scene = composer.newScene()
-
+local numOfLives = 0
 
 local enemy, playerChar, background
 -- import sprites(inherit player sprite and create enemy.lua file for enemy sprites)-- enemy 1 and enemy2
@@ -21,22 +21,24 @@ local function playerDeath()
          time = 500
       }
 
-   composer.gotoScene("mainmenu", options)
+   composer.gotoScene("mainmenu", options) -- gameover if all lives lost
 
    end
 end
 
 -- "scene:create()"
 function scene:create( event )
- 
+
    local sceneGroup = self.view
+
+   local parent = event.parent -- reference to parent object
 
    local background = display.newRect(display.contentCenterX, display.contentCenterY, 500,500)
    print("IN BATTLE SCENE OVERLAY ")
    -- add the attack button and functionality
    -- add the health bars for enemy and player's pokemon
 
-
+   print(parent)
 
    local playerHealthBar = widget.newProgressView(
       {
@@ -150,6 +152,17 @@ local function handleAttackButtonEvent( event )
          enemyHealthBar:setProgress(enemyHealthBar:getProgress() - 0.20)
       end -- end else
    end -- end if
+   -- check for health status
+   if(playerHealthBar:getProgress()  <= 0) then -- if player dies, decrement lives
+      composer.hideOverlay("battleScene", 400)
+      parent:goToPreviousScene() -- uses parent function in scene 5
+      -- and restart the scene
+   end
+   if(enemyHealthBar:getProgress()  <= 0) then -- if player dies, decrement lives
+      composer.hideOverlay("battleScene", 400)
+      parent:goToNextScene() -- uses parent function in scene 5
+      -- go to the scene7
+   end
 end -- end function
 
 local function handleDefendButtonEvent( event )
@@ -161,6 +174,20 @@ local function handleDefendButtonEvent( event )
          -- nothing happens if they both defend because it is countered
       end -- end else
    end -- end if
+-- check for health status
+   if(playerHealthBar:getProgress() <= 0) then -- if player dies, decrement lives
+      composer.hideOverlay("battleScene", 400)
+      -- and restart the scene
+      parent:goToPreviousScene() -- uses parent function in scene 5
+
+   end
+   if(enemyHealthBar:getProgress()  <= 0) then -- if player dies, decrement lives
+      composer.hideOverlay("battleScene", 400)
+      parent:goToNextScene() -- uses parent function in scene 5
+
+      -- go to the next scene
+   end
+
 end -- end function
 
 

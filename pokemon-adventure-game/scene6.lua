@@ -35,13 +35,22 @@ function scene:create( event )
 	world = display.newGroup()
 
 
-   local function goToNextScene()
+   function scene:goToNextScene()
 
-      local options = {
+      local nextOptions = {
          effect = "fade",
          time = 500
       }
-      composer.gotoScene("scene5", options)
+      composer.gotoScene("scene7", nextOptions)
+   end
+
+   function scene:goToPreviousScene()
+
+      local prevOptions = {
+         effect = "fade",
+         time = 500
+      }
+      composer.gotoScene("scene6", prevOptions)
    end
 
 
@@ -77,7 +86,7 @@ local function circleCollision (event)
       print(playerChar)
 
 
-      local overlayOptions = {
+      local overlayOptions = { -- options for scene overlay
          effect = "fade",
          time = 500,
          isModal = true
@@ -85,9 +94,8 @@ local function circleCollision (event)
 
 
       -- draw battle button
-      local function handleButtonEvent( event )
-
-         if("ended" == event.phase) then
+      local function handleButtonEvent( buttonEvent )
+         if("ended" == buttonEvent.phase) then
             -- call the battleScene.lua overlay
             print("battleSceneOverlay")
             composer.showOverlay("battleScene", overlayOptions)
