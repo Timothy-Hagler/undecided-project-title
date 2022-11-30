@@ -23,7 +23,7 @@ function scene:create( event )
 
    local function playButtonPressed(event)
       if (event.phase == "ended") then
-         composer.gotoScene("scene6")
+         composer.gotoScene("scene5")
       end
    end
 
