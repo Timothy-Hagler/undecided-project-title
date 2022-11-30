@@ -7,9 +7,13 @@ local obstacle = require("obstacle")
 local widget = require("widget")
 local musicTrack
 local numOfLives = 3
+local cameraDestroyed = nil
+local playerChar
 
 physics.start()
 physics.setGravity(0, 0)
+-- physics.setDrawMode("hybrid") -- #FIXME
+
 if playerChar == nil then
 	playerChar = player:new({ x = display.contentCenterX, y = 450, inWater = false })
 else
@@ -33,30 +37,60 @@ local function updateSavedGame()
 	io.close(updatedFile)
 end
 
+function scene:goToNextScene()
+
+	local options = {
+		effect = "fade",
+		time = 500
+	}
+	composer.gotoScene("scene6", options)
+end
+
+function scene:goToPreviousScene()
+
+	local options = {
+		effect = "fade",
+		time = 500
+	}
+	composer.gotoScene("scene5", options)
+end
+
+-- Move the world wrt. the player to simulate player movement
+local function movePlayer(event)
+	if (event.phase == "moved" or event.phase == "began") then
+		local xvel, yvel
+		xvel = (event.x - display.contentCenterX) / (display.contentWidth / 2) * player_velocity_scale
+		yvel = (event.y - display.contentCenterY) / (display.contentHeight / 2) * player_velocity_scale
+		playerChar:move(xvel, yvel, event.phase)
+
+	elseif (event.phase == "ended") then
+		playerChar:StopMoving()
+	end
+end
+
+local success = audio.loadSound("audio/success.mp3")
+local function resumeAudio()
+	audio.resume(1)
+end
+
+-- local function nextGame()
+-- 	audio.stop(1)
+-- 	local options = {
+-- 		effect = "fade",
+-- 		time = 500
+-- 	}
+-- 	timer.cancelAll()
+-- 	composer.gotoScene("scene6", options)
+-- end
+
 -- "scene:create()"
 function scene:create(event)
 
 	local sceneGroup = self.view
 	world = display.newGroup()
 
+	sceneGroup:insert(playerChar.sprite)
 
-	function scene:goToNextScene()
-
-		local options = {
-			effect = "fade",
-			time = 500
-		}
-		composer.gotoScene("scene6", options)
-	end
-
-	function scene:goToPreviousScene()
-
-		local options = {
-			effect = "fade",
-			time = 500
-		}
-		composer.gotoScene("scene5", options)
-	end
 
 	local background = display.newImage('images/route.png')
 	background.x = display.contentCenterX
@@ -125,8 +159,6 @@ function scene:create(event)
 	fence:spawn()
 	world:insert(fence.sprite)
 
-	sceneGroup:insert(playerChar.sprite)
-
 	Options = {
 		frames = {
 			{ x = 0, y = 0,
@@ -157,42 +189,41 @@ function scene:create(event)
 	boulderGoal.y = 322
 
 	physics.addBody(boulderGoal, "dynamic", { outline = boulderGoalOutline });
-	boulderGoal:addEventListener()
 
 
-	-- bulbasaur (friend)
-	local bulbOpt =
-	{
-		frames =
-		{
-			{ x = 39, y = 119, width = 70, height = 66 }, -- 1. full bulb
-			{ x = 183, y = 91, width = 40, height = 34 }, -- 2. mini bulb sprite
-			{ x = 365, y = 197, width = 51, height = 36 }, -- 3. bulb back (color from background might be included oops
-			{ x = 12, y = 271, width = 30, height = 32 }, -- 4. bulb forward walk 1
-			{ x = 76, y = 273, width = 30, height = 32 }, -- 5. bulb forward walk 2
-			{ x = 140, y = 271, width = 30, height = 32 }, -- 6. bulb forward walk 3
-			{ x = 204, y = 273, width = 30, height = 32 }, -- 7. bulb forward walk 4
-			{ x = 8, y = 335, width = 38, height = 30 }, -- 8. bulb side run 1
-			{ x = 72, y = 337, width = 38, height = 30 }, -- 9. bulb side run 2
-			{ x = 136, y = 335, width = 38, height = 30 }, -- 10. bulb side run 3
-			{ x = 10, y = 399, width = 38, height = 30 }, -- 12. bulb right 1
-			{ x = 74, y = 401, width = 38, height = 30 }, -- 13. bulb right 2
-			{ x = 138, y = 399, width = 38, height = 30 }, -- 14. bulb right 3
-			{ x = 202, y = 401, width = 38, height = 30 }, -- 15. bulb right 4
-		}
-	}
+	-- -- bulbasaur (friend)
+	-- local bulbOpt =
+	-- {
+	-- 	frames =
+	-- 	{
+	-- 		{ x = 39, y = 119, width = 70, height = 66 }, -- 1. full bulb
+	-- 		{ x = 183, y = 91, width = 40, height = 34 }, -- 2. mini bulb sprite
+	-- 		{ x = 365, y = 197, width = 51, height = 36 }, -- 3. bulb back (color from background might be included oops
+	-- 		{ x = 12, y = 271, width = 30, height = 32 }, -- 4. bulb forward walk 1
+	-- 		{ x = 76, y = 273, width = 30, height = 32 }, -- 5. bulb forward walk 2
+	-- 		{ x = 140, y = 271, width = 30, height = 32 }, -- 6. bulb forward walk 3
+	-- 		{ x = 204, y = 273, width = 30, height = 32 }, -- 7. bulb forward walk 4
+	-- 		{ x = 8, y = 335, width = 38, height = 30 }, -- 8. bulb side run 1
+	-- 		{ x = 72, y = 337, width = 38, height = 30 }, -- 9. bulb side run 2
+	-- 		{ x = 136, y = 335, width = 38, height = 30 }, -- 10. bulb side run 3
+	-- 		{ x = 10, y = 399, width = 38, height = 30 }, -- 12. bulb right 1
+	-- 		{ x = 74, y = 401, width = 38, height = 30 }, -- 13. bulb right 2
+	-- 		{ x = 138, y = 399, width = 38, height = 30 }, -- 14. bulb right 3
+	-- 		{ x = 202, y = 401, width = 38, height = 30 }, -- 15. bulb right 4
+	-- 	}
+	-- }
 
-	local bulbSheet = graphics.newImageSheet("spritesheets/bulbasaur.png", bulbOpt)
+	-- local bulbSheet = graphics.newImageSheet("spritesheets/bulbasaur.png", bulbOpt)
 
-	-- create the sequence table
-	local bulbSequenceData =
-	{
-		{ name = "attack", frames = { 4, 5, 6, 7 }, time = 200, loopCount = 0 }
-	}
+	-- -- create the sequence table
+	-- local bulbSequenceData =
+	-- {
+	-- 	{ name = "attack", frames = { 4, 5, 6, 7 }, time = 200, loopCount = 0 }
+	-- }
 
-	local bulbSprite = display.newSprite(bulbSheet, bulbSequenceData)
-	bulbSprite.x = display.contentCenterX
-	bulbSprite.y = display.contentCenterY
+	-- local bulbSprite = display.newSprite(bulbSheet, bulbSequenceData)
+	-- bulbSprite.x = display.contentCenterX
+	-- bulbSprite.y = display.contentCenterY
 
 
 	local circle1 = display.newCircle(display.contentCenterX + 50, display.contentCenterY - 50, 30)
@@ -224,12 +255,8 @@ function scene:create(event)
 				}
 			}
 			circle1:removeEventListener("collision", circleCollision)
+			camera:destroy()
 			composer.showOverlay("battleScene", overlayOptions)
-
-			-- draw battle button
-
-
-
 		end
 	end
 
@@ -285,57 +312,44 @@ function scene:create(event)
 	sceneGroup:insert(boulderGoal)
 	world:insert(boulderGoal)
 
-	sceneGroup:insert(world)
-
+	
 	local entrance = display.newRect(display.contentCenterX, 485, 100, 20)
 	entrance:setFillColor(1, 1, 1, 0)
 	physics.addBody(entrance, "static")
 	sceneGroup:insert(entrance)
 	world:insert(entrance)
-
+	
 	local exitBlock = display.newRect(50, 10, 100, 10)
 	entrance:setFillColor(1, 1, 1, 0)
 	physics.addBody(exitBlock, "static")
 	sceneGroup:insert(exitBlock)
 	world:insert(exitBlock)
-
+	
+	exitBlock:addEventListener("collision", scene.goToNextScene)
+	
+	sceneGroup:insert(world)
+	
 	musicTrack = audio.loadStream("audio/route1Music.mp3")
 
-
-	-- Move the world wrt. the player to simulate player movement
-	local function movePlayer(event)
-		-- print(event.phase)
-		if (event.phase == "moved" or event.phase == "began") then
-			local xvel, yvel
-			xvel = (event.x - display.contentCenterX) / (display.contentWidth / 2) * player_velocity_scale
-			yvel = (event.y - display.contentCenterY) / (display.contentHeight / 2) * player_velocity_scale
-			playerChar:move(xvel, yvel, event.phase)
-
-		elseif (event.phase == "ended") then
-			playerChar:StopMoving()
-		end
-	end
-
-	local success = audio.loadSound("audio/success.mp3")
-	local function resumeAudio()
-		audio.resume(1)
-	end
-
-	local function nextGame()
-		audio.stop(1)
-		local options = {
-			effect = "fade",
-			time = 500
-		}
-		timer.cancelAll()
-		composer.gotoScene("scene6", options)
-	end
-
-	Runtime:addEventListener("touch", movePlayer)
-	updateSavedGame()
 	-- playerChar.sprite.collision = onPlayerCollision		-- local collison
 	-- playerChar.sprite:addEventListener("collision")		-- local collision
 	--Runtime:addEventListener("collision", onGlobalCollision)	-- global collision
+end
+
+local function setupCamera(playerChar, world)
+	--------------------------------
+	-- Camera Tracking
+	--------------------------------
+	camera = perspective.createView(2)
+	camera:add(playerChar.sprite, 1) -- Add player to layer 1 of the camera
+	camera:appendLayer() -- add layer 0 in front of the camera
+
+	camera:add(world, 2)
+	camera:setParallax(0, 1) -- set parallax for each layer in descending order
+
+	camera.damping = 10 -- A bit more fluid tracking
+	camera:setFocus(playerChar.sprite) -- Set the focus to the player
+	-- print("Layers: " .. camera:layerCount())	-- #DEBUG
 end
 
 function scene:show(event)
@@ -343,19 +357,9 @@ function scene:show(event)
 	local phase = event.phase
 
 	if (phase == "will") then
-		--------------------------------
-		-- Camera Tracking
-		--------------------------------
-		camera = perspective.createView(2)
-		camera:add(playerChar.sprite, 1) -- Add player to layer 1 of the camera
-		camera:appendLayer() -- add layer 0 in front of the camera
-
-		camera:add(world, 2)
-		camera:setParallax(0, 1) -- set parallax for each layer in descending order
-
-		camera.damping = 10 -- A bit more fluid tracking
-		camera:setFocus(playerChar.sprite) -- Set the focus to the player
-		print("Layers: " .. camera:layerCount())
+		setupCamera(playerChar, world)
+		Runtime:addEventListener("touch", movePlayer)
+		updateSavedGame()
 	elseif (phase == "did") then
 		-- Called when the scene is now on screen.
 		-- Insert code here to make the scene come alive.
@@ -374,16 +378,21 @@ function scene:hide(event)
 
 	if (phase == "will") then
 		audio.stop(1)
+		playerChar.movementEnabled = false
+		Runtime:removeEventListener("touch", movePlayer)
 		updateSavedGame()
 
 	elseif (phase == "did") then
 		-- Called immediately after scene goes off screen.
-		camera:destroy()
-		composer.removeScene("scene5", false)
+		camera:cancel()
 	end
 end
 
 function scene:destroy(event)
+
+	camera:destroy()
+	camera = nil
+	composer.removeScene("scene5", false)
 
 	local sceneGroup = self.view
 

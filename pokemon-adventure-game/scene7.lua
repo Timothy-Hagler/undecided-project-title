@@ -6,18 +6,24 @@ local player = require("player")
 local obstacle = require("obstacle")
 local musicTrack
 local camera, world
+local playerChar
+local player_velocity_scale = 150
+local numOfLives = 3
+worldTable = {}
+
+
 physics.start()
 physics.setGravity(0, 0)
+-- physics.setDrawMode("hybrid") -- #FIXME
+
 if playerChar == nil then
 	playerChar = player:new({ x = display.contentCenterX, y = display.contentCenterY, inWater = false, tag = "player" })
 else
 	playerChar.inWater = false
-	playerChar.y = display.contentCenterY
+	playerChar.sprite.x = display.contentCenterX
+	playerChar.sprite.y = display.contentCenterY
 end
-local player_velocity_scale = 150
-worldTable = {}
-local numOfLives = 3
-
+playerChar:spawn()
 
 local function updateSavedGame()
 	local path = system.pathForFile("save.csv", system.DocumentsDirectory)
@@ -28,11 +34,28 @@ local function updateSavedGame()
 	io.close(updatedFile)
 end
 
+-- Move the world wrt. the player to simulate player movement
+local function movePlayer(event)
+	-- print(event.phase)
+	if (event.phase == "moved" or event.phase == "began") then
+		local xvel, yvel
+		xvel = (event.x - display.contentCenterX) / (display.contentWidth / 2) * player_velocity_scale
+		yvel = (event.y - display.contentCenterY) / (display.contentHeight / 2) * player_velocity_scale
+		playerChar:move(xvel, yvel, event.phase)
+
+	elseif (event.phase == "ended") then
+		playerChar:StopMoving()
+	end
+end
+
 -- "scene:create()"
 function scene:create(event)
 
 	local sceneGroup = self.view
 	world = display.newGroup()
+
+	sceneGroup:insert(playerChar.sprite)
+
 
 
 	local hugeBackground = display.newImage("images/gymMap.jpg")
@@ -283,12 +306,6 @@ function scene:create(event)
 	world:insert(bulbSprite)
 
 
-
-
-
-
-
-
 	local circle1 = display.newCircle(bulbSprite.x, bulbSprite.y, 50)
 	-- local circle1 = display.newCircle(display.contentCenterX,display.contentCenterY,100)
 	circle1.alpha = 0
@@ -322,21 +339,15 @@ function scene:create(event)
 					numOfLives = numOfLives,
 				}
 			}
+			playerChar.movementEnabled = false
 			circle1:removeEventListener("collision", circleCollision)
+			camera:destroy()
 			composer.showOverlay("battleScene", overlayOptions)
 		end
 	end
 
 	circle1:addEventListener("collision", circleCollision)
 	-- call the battle scene overlay here if the radius is encountered at a certain x and y positions
-
-
-
-
-
-	playerChar:spawn()
-
-	sceneGroup:insert(playerChar.sprite)
 
 
 	local boulderOptions = {
@@ -371,76 +382,33 @@ function scene:create(event)
 
 	musicTrack = audio.loadStream("audio/gymMusic.mp3")
 
-
-	-- Move the world wrt. the player to simulate player movement
-	local function movePlayer(event)
-		-- print(event.phase)
-		if (event.phase == "moved" or event.phase == "began") then
-			local xvel, yvel
-			xvel = (event.x - display.contentCenterX) / (display.contentWidth / 2) * player_velocity_scale
-			yvel = (event.y - display.contentCenterY) / (display.contentHeight / 2) * player_velocity_scale
-			playerChar:move(xvel, yvel)
-
-		elseif (event.phase == "ended") then
-			playerChar:StopMoving()
-		end
-	end
-
-	local function onGlobalCollision(event)
-		transition.cancel(event.target)
-		print("collision handler")
-		print(event.phase)
-		if (event.phase == "began") then
-			print("hit")
-		elseif (event.phase == "ended") then
-			print("no longer hit")
-		end
-	end
-
-	local function onPlayerCollision(self, event)
-		transition.cancel(event.target)
-
-		if (event.phase == "began") then
-			print("hit at " .. playerChar.sprite.x .. " " .. playerChar.sprite.y)
-
-		elseif (event.phase == "ended") then
-			print("no longer hit")
-		end
-	end
-
-	local function updatePlayerRotation()
-		playerChar.sprite.rotation = 0
-	end
-
-	Runtime:addEventListener("touch", movePlayer)
-	playerChar.sprite.collision = onPlayerCollision
-	playerChar.sprite:addEventListener("collision")
-
-	timer.performWithDelay(0, updatePlayerRotation, -1)
 	updateSavedGame()
 	--Runtime:addEventListener("collision", onGlobalCollision)	-- global collision
+end
+
+local function setupCamera(playerChar, world)
+	--------------------------------
+	-- Camera Tracking
+	--------------------------------
+	camera = perspective.createView(2)
+	camera:add(playerChar.sprite, 1) -- Add player to layer 1 of the camera
+	camera:appendLayer() -- add layer 0 in front of the camera
+
+	camera:add(world, 2)
+	camera:setParallax(0, 1) -- set parallax for each layer in descending order
+
+	camera.damping = 10 -- A bit more fluid tracking
+	camera:setFocus(playerChar.sprite) -- Set the focus to the player
 end
 
 function scene:show(event)
 	local sceneGroup = self.view
 	local phase = event.phase
-	playerChar.sprite.x = display.contentCenterX
-	playerChar.sprite.y = display.contentCenterY
 
 	if (phase == "will") then
-		--------------------------------
-		-- Camera Tracking
-		--------------------------------
-		camera = perspective.createView(2) -- #DEBUG1
-		camera:add(playerChar.sprite, 1) -- Add player to layer 1 of the camera	-- #DEBUG1
-		camera:appendLayer() -- add layer 0 in front of the camera	-- #DEBUG1
-
-		camera:add(world, 2) -- #DEBUG1
-		camera:setParallax(0, 1) -- set parallax for each layer in descending order	-- #DEBUG1
-
-		camera.damping = 10 -- A bit more fluid tracking
-		camera:setFocus(playerChar.sprite) -- Set the focus to the player
-		print("Layers: " .. camera:layerCount())
+		setupCamera(playerChar, world)
+		playerChar.movementEnabled = true
+		Runtime:addEventListener("touch", movePlayer)
 	elseif (phase == "did") then
 		-- Called when the scene is now on screen.
 		-- Insert code here to make the scene come alive.
@@ -457,6 +425,7 @@ function scene:hide(event)
 
 	if (phase == "will") then
 		audio.stop(1)
+		Runtime:removeEventListener("touch", movePlayer)
 		updateSavedGame()
 
 	elseif (phase == "did") then
@@ -466,13 +435,16 @@ function scene:hide(event)
 end
 
 function scene:destroy(event)
-
 	local sceneGroup = self.view
-	updateSavedGame()
+
+	camera:destroy()
+	camera = nil
+	composer.removeScene("scene7", false)
 
 	-- Called prior to the removal of scene's view ("sceneGroup").
 	-- Insert code here to clean up the scene.
 	-- Example: remove display objects, save state, etc.
+	world:removeSelf()
 end
 
 ---------------------------------------------------------------------------------
