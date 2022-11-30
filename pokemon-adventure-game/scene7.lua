@@ -38,42 +38,29 @@ function scene:create( event )
    local background = display.newImage("images/gymMap.jpg")
    background.x = display.contentCenterX
    background.y = display.contentCenterY*0.01 - 45
-    world:insert(background)
+	world:insert(background)
+
+	
+	local imgpath = "images/gymObstacle.png"
+	local obstacle1 = obstacle:new({ img=imgpath, outline=graphics.newOutline(2, imgpath, 1), bodyType="static",
+		x=background.x, y=background.y })
+	obstacle1:spawn()
+	world:insert(obstacle1.sprite)
 
 
+	local obstacleFull2 = "images/gymObstacle2.png"
+	local obstaclesOutline2 = graphics.newOutline(2, obstacleFull2)
+	local obstacle2 = display.newImage(obstacleFull2)
+	
+	obstacle2.x = background.x
+	obstacle2.y = background.y
 
-	local Options = {
-      frames = {
-      {x = 0, y = 0, 
-      width = 320, height = 480}
+	physics.addBody(obstacle2, "static", {outline = obstaclesOutline2, density=500})
+	world:insert(obstacle2)
 
-      }
-   }
-
-   local obstacleFull = "images/gymObstacle.png"
-   local obstaclesOutline = graphics.newOutline(2, obstacleFull)
-   local obstacle = display.newImage(obstacleFull)
-   obstaclesOutline.alpha = 0
-   
-   obstacle.x = background.x
-   obstacle.y = background.y
-
-   physics.addBody(obstacle, "static", {outline = obstaclesOutline, density=500})
-    world:insert(obstacle)
-
-    local obstacleFull2 = "images/gymObstacle2.png"
-    local obstaclesOutline2 = graphics.newOutline(2, obstacleFull2)
-    local obstacle2 = display.newImage(obstacleFull2)
-    
-    obstacle2.x = background.x
-    obstacle2.y = background.y
- 
-    physics.addBody(obstacle2, "static", {outline = obstaclesOutline2, density=500})
-     world:insert(obstacle2)
-
-     local obstacleFull3 = "images/gymObstacle3.png"
-   local obstaclesOutline3 = graphics.newOutline(2, obstacleFull3)
-   local obstacle3 = display.newImage(obstacleFull3)
+	local obstacleFull3 = "images/gymObstacle3.png"
+local obstaclesOutline3 = graphics.newOutline(2, obstacleFull3)
+local obstacle3 = display.newImage(obstacleFull3)
    
    
    obstacle3.x = background.x
