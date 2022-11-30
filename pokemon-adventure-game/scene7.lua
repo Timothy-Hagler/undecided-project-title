@@ -38,7 +38,7 @@ function scene:create( event )
    local background = display.newImage("images/gymMap.jpg")
    background.x = display.contentCenterX
    background.y = display.contentCenterY*0.01 - 45
-    world:insert(background)
+	world:insert(background)
 
 
 
@@ -61,19 +61,19 @@ function scene:create( event )
    physics.addBody(obstacle1, "static", {outline = obstaclesOutline, density=500})
     world:insert(obstacle1)
 
-    local obstacleFull2 = "images/gymObstacle2.png"
-    local obstaclesOutline2 = graphics.newOutline(2, obstacleFull2)
-    local obstacle2 = display.newImage(obstacleFull2)
-    
-    obstacle2.x = background.x
-    obstacle2.y = background.y
- 
-    physics.addBody(obstacle2, "static", {outline = obstaclesOutline2, density=500})
-     world:insert(obstacle2)
+	local obstacleFull2 = "images/gymObstacle2.png"
+	local obstaclesOutline2 = graphics.newOutline(2, obstacleFull2)
+	local obstacle2 = display.newImage(obstacleFull2)
+	
+	obstacle2.x = background.x
+	obstacle2.y = background.y
 
-     local obstacleFull3 = "images/gymObstacle3.png"
-   local obstaclesOutline3 = graphics.newOutline(2, obstacleFull3)
-   local obstacle3 = display.newImage(obstacleFull3)
+	physics.addBody(obstacle2, "static", {outline = obstaclesOutline2, density=500})
+	world:insert(obstacle2)
+
+	local obstacleFull3 = "images/gymObstacle3.png"
+local obstaclesOutline3 = graphics.newOutline(2, obstacleFull3)
+local obstacle3 = display.newImage(obstacleFull3)
    
    
    obstacle3.x = background.x

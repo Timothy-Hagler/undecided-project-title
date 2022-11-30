@@ -42,6 +42,7 @@ function scene:create( event )
 	local lTerrain = obstacle:new({ img=sheet, imgIdx=1, outline=outline, bodyType="static",
 		x=display.contentCenterX, y=display.contentCenterY })
 	lTerrain:spawn()
+	lTerrain.bounce = 0
 	world:insert(lTerrain.sprite)
 
    sheet = graphics.newImageSheet("images/map1_right_terrain.png", Options) 
@@ -92,7 +93,7 @@ function scene:create( event )
 
 	sheet = graphics.newImageSheet("images/map1_fence_terrain.png", Options) 
    outline = graphics.newOutline(2, sheet, 1);
-	local fence = obstacle:new({ img=sheet, imgIdx=1, outline=outline, bodyType="static",
+	local fence = obstacle:new({ img=sheet, imgIdx=1, outline=graphics.newOutline(2, sheet, 1), bodyType="static",
 		x=display.contentCenterX, y=display.contentCenterY })
 	fence:spawn()
 	world:insert(fence.sprite)
@@ -101,17 +102,19 @@ function scene:create( event )
    playerChar:spawn()
    sceneGroup:insert(playerChar.sprite)
 
-   local boulderOptions = {
+   Options = {
       frames = {
       {x = 0, y = 0, 
       width = 27, height = 28}
       }
    }
-	local boulderSheet = graphics.newImageSheet("images/boulder.png", boulderOptions)
-	local boulderOutline = graphics.newOutline(2, boulderSheet, 1)
-	local boulder = obstacle:new({ img=boulderSheet, imgIdx=1, outline=boulderOutline, x=200, y=322 })
-	boulder:spawn()
+	
+	sheet = graphics.newImageSheet("images/boulder.png", Options) 
+	local boulder = obstacle:new({ img=sheet, imgIdx=1, outline=graphics.newOutline(2, sheet, 1),
+		x=220, y=322 })
+		boulder:spawn()
 	world:insert(boulder.sprite)
+
 
    local boulderGoalOptions = {
       frames = {
@@ -163,26 +166,10 @@ function scene:create( event )
       end
    end
 
-	-- local function onPlayerCollision( self, event )
-   --    transition.cancel( event.target )
-
-	-- --	print( "player collision with " .. event.target.tag )	-- #TODO: Assign this for puzzle goals and one-way terrain
-   --    if ( event.phase == "began" ) then
-   --       print("hit")
-   --    elseif ( event.phase == "ended" ) then
-   --       print("no longer hit")
-   --    end
-   -- end
-
-   local function updatePlayerRotation()
-      playerChar.sprite.rotation = 0
-   end
-
    Runtime:addEventListener("touch", movePlayer)
-	-- playerChar.sprite.collision = onPlayerCollision
-   -- playerChar.sprite:addEventListener("collision")
-   timer.performWithDelay(0,updatePlayerRotation,-1)
    updateSavedGame()
+	-- playerChar.sprite.collision = onPlayerCollision		-- local collison
+   -- playerChar.sprite:addEventListener("collision")		-- local collision
    --Runtime:addEventListener("collision", onGlobalCollision)	-- global collision
 end
 
