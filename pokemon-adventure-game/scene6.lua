@@ -5,6 +5,8 @@ local widget = require("widget")
 local scene = composer.newScene()
 local player = require("player")
 local musicTrack
+local numOfLives = 3
+
  
 physics.start()
 physics.setGravity(0,0)
@@ -168,7 +170,7 @@ circle1:addEventListener("collision", circleCollision)
         obstacle6.y = background.y
      
         physics.addBody(obstacle6, "static", {outline = obstaclesOutline6, density=500})
-         world:insert(obstacle6)
+        world:insert(obstacle6)
 
 
    sceneGroup:insert(playerChar.sprite)

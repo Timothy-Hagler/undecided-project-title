@@ -6,6 +6,7 @@ local player = require( "player" )
 local obstacle = require( "obstacle" )
 local widget = require("widget")
 local musicTrack
+local numOfLives = 3
 
 physics.start()
 physics.setGravity(0,0)
@@ -206,22 +207,26 @@ function scene:create( event )
    
    
    -- add collision event
-   local function circleCollision (event)
-      if(event.phase == "began") then
-         print("CIRCLE1")
-         print(event.other)
-         print(playerChar)
-   
-   
-         local overlayOptions = { -- options for scene overlay
-            effect = "fade",
-            time = 500,
-            isModal = true,
-            params = {
-               nextScene = "scene6",
-               currScene = "scene5",
-               pokemon = "squirtle"
-            }
+
+
+
+-- add collision event
+local function circleCollision (event)
+   if(event.phase == "began") then
+      print("CIRCLE1")
+      print(event.other)
+      print(playerChar)
+
+
+      local overlayOptions = { -- options for scene overlay
+         effect = "fade",
+         time = 500,
+         isModal = true,
+         params = {
+            nextScene = "scene5",
+            currScene = "scene6",
+            pokemon = "charmander",
+            numOfLives = numOfLives,
          }
          circle1:removeEventListener("collision", circleCollision)
          composer.showOverlay("battleScene", overlayOptions)
@@ -230,7 +235,22 @@ function scene:create( event )
    
    
       end
+
+
+
+      local battleButton = widget.newButton(
+         {
+            left = display.contentCenterX - 100,
+            top = display.contentCenterY + 200,
+            id = "battleButton",
+            shape = "roundedRect",
+            label = "BATTLE",
+            onEvent = handleButtonEvent
+         }
+      )
+ ]]
    end
+end
    
    circle1:addEventListener("collision", circleCollision)
    -- call the battle scene overlay here if the radius is encountered at a certain x and y positions
