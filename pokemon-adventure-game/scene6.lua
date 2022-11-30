@@ -41,7 +41,8 @@ function scene:create( event )
          effect = "fade",
          time = 500
       }
-      composer.gotoScene("scene5", options)
+		timer.cancelAll()
+      composer.gotoScene("scene7", options)
    end
 
    local backgroundWater = display.newImage("images/map3smallwater.png")

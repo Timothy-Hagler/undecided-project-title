@@ -209,6 +209,7 @@ local success = audio.loadSound("audio/success.mp3")
       	effect = "fade",
       	time = 500
    	}
+		timer.cancelAll()
    	composer.gotoScene("scene6", options)
 	end
 
