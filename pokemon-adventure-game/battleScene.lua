@@ -158,6 +158,45 @@ end
 
 if(params.pokemon == "squirtle") then
    
+-- squirtle (enemy)
+local squirtleOpt = 
+{
+   frames =
+   {
+   {x = 39, y = 113, width = 76, height = 78}, -- 1. full squirtle
+   {x = 185, y = 93, width = 42, height = 34}, -- 2. mini squirtle sprite
+   {x = 17, y = 267, width = 22, height = 30}, -- 3. squirtle forward walk 1
+   {x = 81, y = 269, width = 22, height = 30}, -- 4. squirtle forward walk 2
+   {x = 145, y = 267, width = 22, height = 30}, -- 5. squirtle forward walk 3
+   {x = 209, y = 269, width = 22, height = 30}, -- 6. squirtle forward walk 4
+   {x = 17, y = 331, width = 30, height = 30}, -- 7. squirtle side run 1
+   {x = 81, y = 333, width = 30, height = 30}, -- 8. squirtle side run 2
+   {x = 145, y = 331, width = 30, height = 30}, -- 9. squirtle side run 3
+   {x = 209, y = 333, width = 30, height = 30}, -- 10. squirtle side run 4
+   {x = 11, y = 395, width = 30, height = 30}, -- 11. squirtle right 1
+   {x = 75, y = 397, width = 30, height = 30}, -- 12. squirtle right 2
+   {x = 139, y = 395, width = 30, height = 30}, -- 13. squirtle right 3
+   {x = 203, y = 397, width = 30, height = 30}, -- 14. squirtle right 4
+ }
+}
+
+
+local squirtleSheet = graphics.newImageSheet("spritesheets/squirtle.png", squirtleOpt)
+
+-- create the sequence table
+local squirtleSequenceData = 
+{
+{ name = "attack", frames = {3, 4, 5, 6}, time = 200, loopCount = 0},
+{ name = "run", frames = {7, 8, 9, 10}, time = 200, loopCount = 0},
+{ name = "defend", frames = {11, 12, 13, 14}, time = 200, loopCount = 0}
+}
+
+local squirtleSprite = display.newSprite(squirtleSheet, squirtleSequenceData)
+
+squirtleSprite.x = display.contentCenterX + 50
+squirtleSprite.y = display.contentCenterY - 50
+
+
 end
 
 

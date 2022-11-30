@@ -10,7 +10,6 @@ local musicTrack
 physics.start()
 physics.setGravity(0,0)
 local camera, world
-local battleButton
 if playerChar == nil then
    playerChar = player:new({x=display.contentCenterX, y=display.contentCenterY, inWater=false})
 else
@@ -24,6 +23,7 @@ local worldTable = {}
 
 local function updateSavedGame()
    local path = system.pathForFile("save.csv", system.DocumentsDirectory)
+   print(path)
    local updatedFile = io.open(path, "w+")
    updatedFile:write('scene' .. ',' .. 'health' .. ',' .. 'lives')
    updatedFile:write('\n')
@@ -37,17 +37,30 @@ function scene:create( event )
    local sceneGroup = self.view
 	world = display.newGroup()
 
+
+   function scene:goToNextScene()
+
+      local options = {
+         effect = "fade",
+         time = 500
+      }
+      composer.gotoScene("scene6", options)
+   end
+
+   function scene:goToPreviousScene()
+
+      local options = {
+         effect = "fade",
+         time = 500
+      }
+      composer.gotoScene("scene5", options)
+   end
+
    local background = display.newImage('images/route.png')
    background.x = display.contentCenterX
    background.y = display.contentCenterY
 	world:insert(background)
 
-
-   local circle1 = display.newCircle(display.contentCenterX,display.contentCenterY,100)
-
-   circle1:setFillColor(1,0,0)
-   physics.addBody(circle1, "static", {radius = 50})
-   circle1.isSensor = true
 
 	local Options = { frames = { {x = 0, y = 0, width = 320, height = 480} } }
    local sheet = graphics.newImageSheet("images/map1_left_terrain.png", Options) 
@@ -104,7 +117,7 @@ function scene:create( event )
 		ledge_lg:spawn()
 	world:insert(ledge_lg.sprite)
 
-	sheet = graphics.newImageSheet("images/map1_fence_terrain.png", Options)
+	sheet = graphics.newImageSheet("images/map1_fence_terrain.png", Options) 
    outline = graphics.newOutline(2, sheet, 1);
 	local fence = obstacle:new({ img=sheet, imgIdx=1, outline=graphics.newOutline(2, sheet, 1), bodyType="static",
 		x=display.contentCenterX, y=display.contentCenterY })
@@ -179,13 +192,15 @@ function scene:create( event )
    bulbSprite.x = display.contentCenterX
    bulbSprite.y = display.contentCenterY
 
-   local circle1 = display.newCircle(display.contentCenterX + 50 ,display.contentCenterY - 40 ,30)
+  
+   local circle1 = display.newCircle(display.contentCenterX + 50 ,display.contentCenterY - 50 ,30)
    circle1:setFillColor(1,0,0)
    --local circle1 = display.newCircle(display.contentCenterX,display.contentCenterY,100)
-   --circle1.alpha = 0
+   circle1.alpha = 0
    -- hide the circle
    physics.addBody(circle1, "static", {radius = 100})
    circle1.isSensor = true
+   world:insert(circle1)
    
    
    
@@ -204,12 +219,12 @@ function scene:create( event )
             params = {
                nextScene = "scene6",
                currScene = "scene5",
-               pokemon = "bulbasaur"
+               pokemon = "squirtle"
             }
          }
    
          -- draw battle button
-         local function handleButtonEvent2( buttonEvent )
+         local function handleButtonEvent( buttonEvent )
             if("ended" == buttonEvent.phase) then
                -- call the battleScene.lua overlay
                print("battleSceneOverlay")
@@ -219,7 +234,7 @@ function scene:create( event )
    
    
    
-         local battleButton2 = widget.newButton(
+         local battleButton = widget.newButton(
             {
                left = display.contentCenterX - 100,
                top = display.contentCenterY + 200,
@@ -280,42 +295,16 @@ function scene:create( event )
    }
 
    local squirtleSprite = display.newSprite(squirtleSheet, squirtleSequenceData)
-   world:insert(circle1)
 
-local function circleCollision (event)
-   if(event.phase == "began") then
-      local overlayOptions = { -- options for scene overlay
-         effect = "fade",
-         time = 500,
-         isModal = true,
-         params = {
-            nextScene = "scene6",
-            currScene = "scene1"
-         }
-      }
+   squirtleSprite.x = display.contentCenterX + 50
+   squirtleSprite.y = display.contentCenterY - 50
 
-      -- draw battle button
-      local function handleButtonEvent( buttonEvent )
-         if("ended" == buttonEvent.phase) then
-            -- call the battleScene.lua overlay
-            composer.showOverlay("battleScene", overlayOptions)
-         end
-      end
+   -- add the collider to squirtle
 
-      battleButton = widget.newButton(
-         {
-            left = display.contentCenterX - 100,
-            top = display.contentCenterY + 200,
-            id = "battleButton",
-            shape = "roundedRect",
-            label = "BATTLE",
-            onEvent = handleButtonEvent
-         }
-      )
-   end
-end
 
-   circle1:addEventListener("collision", circleCollision)
+
+   world:insert(squirtleSprite)
+
    
    sceneGroup:insert(boulderGoal)
 	world:insert(boulderGoal)
@@ -352,6 +341,9 @@ end
 
    Runtime:addEventListener("touch", movePlayer)
    updateSavedGame()
+	-- playerChar.sprite.collision = onPlayerCollision		-- local collison
+   -- playerChar.sprite:addEventListener("collision")		-- local collision
+   --Runtime:addEventListener("collision", onGlobalCollision)	-- global collision
 end
 
 
@@ -380,7 +372,7 @@ function scene:show( event )
 		camera:track() -- Begin auto-tracking
       
 
-      --audio.play( musicTrack, { channel=1, loops=-1 } )
+      audio.play( musicTrack, { channel=1, loops=-1 } )
    end
 end
 

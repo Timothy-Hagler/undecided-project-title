@@ -5,7 +5,7 @@ local scene = composer.newScene()
 local player = require("player")
 local obstacle = require( "obstacle" )
 local musicTrack
- 
+local widget = require("widget")
 local camera, world, playerChar
 local player_velocity_scale = 150
 worldTable = {}
@@ -236,33 +236,103 @@ local obstacle3 = display.newImage(obstacleFull3)
                  physics.addBody(ledge9, "static", {outline = ledgeOutline9, density=500})
                   world:insert(ledge9)
 
-    local bulbOptions =
-    {
-        frames = {
-            {x = 39, y = 119, width = 70, height = 66}, -- 1. full bulb
-            {x = 183, y = 91, width = 40, height = 34}, -- 2. mini bulb sprite
-            {x = 365, y = 197, width = 51, height = 36}, -- 3. bulb back (color from background might be included oops
-            {x = 12, y = 271, width = 30, height = 32}, -- 4. bulb forward walk 1
-            {x = 76, y = 273, width = 30, height = 32}, -- 5. bulb forward walk 2
-            {x = 140, y = 271, width = 30, height = 32}, -- 6. bulb forward walk 3
-            {x = 204, y = 273, width = 30, height = 32}, -- 7. bulb forward walk 4
-            {x = 8, y = 335, width = 38, height = 30}, -- 8. bulb side run 1
-            {x = 72, y = 337, width = 38, height = 30}, -- 9. bulb side run 2
-            {x = 136, y = 335, width = 38, height = 30}, -- 10. bulb side run 3
-            --{x = , y = , width = 38, height = 30}, -- 11. bulb side run 4
-            {x = 10, y = 399, width = 38, height = 30}, -- 12. bulb right 1
-            {x = 74, y = 401, width = 38, height = 30}, -- 13. bulb right 2
-            {x = 138, y = 399, width = 38, height = 30}, -- 14. bulb right 3
-            {x = 202, y = 401, width = 38, height = 30}, -- 15. bulb right 4
-        }
-    }
 
-    local bulbSheet = graphics.newImageSheet("spritesheets/bulbsprites.png", bulbOptions)
-    local bulbasaur = display.newImage(bulbSheet, 4)
-    bulbasaur.x = background.x
-    bulbasaur.y = background.y - 275
-	physics.addBody(bulbasaur, "static");
-    world:insert(bulbasaur)
+                   
+   
+
+-- squirtle (enemy)
+   local squirtleOpt = 
+   {
+      frames =
+      {
+      {x = 39, y = 113, width = 76, height = 78}, -- 1. full squirtle
+      {x = 185, y = 93, width = 42, height = 34}, -- 2. mini squirtle sprite
+      {x = 17, y = 267, width = 22, height = 30}, -- 3. squirtle forward walk 1
+      {x = 81, y = 269, width = 22, height = 30}, -- 4. squirtle forward walk 2
+      {x = 145, y = 267, width = 22, height = 30}, -- 5. squirtle forward walk 3
+      {x = 209, y = 269, width = 22, height = 30}, -- 6. squirtle forward walk 4
+      {x = 17, y = 331, width = 30, height = 30}, -- 7. squirtle side run 1
+      {x = 81, y = 333, width = 30, height = 30}, -- 8. squirtle side run 2
+      {x = 145, y = 331, width = 30, height = 30}, -- 9. squirtle side run 3
+      {x = 209, y = 333, width = 30, height = 30}, -- 10. squirtle side run 4
+      {x = 11, y = 395, width = 30, height = 30}, -- 11. squirtle right 1
+      {x = 75, y = 397, width = 30, height = 30}, -- 12. squirtle right 2
+      {x = 139, y = 395, width = 30, height = 30}, -- 13. squirtle right 3
+      {x = 203, y = 397, width = 30, height = 30}, -- 14. squirtle right 4
+    }
+   }
+
+
+
+   
+
+    local squirtleSheet = graphics.newImageSheet("spritesheets/squirtlsprites.png", squirtleOpt)
+    local squirtle = display.newImage(squirtleSheet, 4)
+    squirtle.x = display.contentCenterX + 100
+    squirtle.y = display.contentCenterY - 100
+	 physics.addBody(squirtle, "static");
+    world:insert(squirtle)
+
+
+
+    local circle1 = display.newCircle(display.contentCenterX, display.contentCenterY, 100)
+   -- local circle1 = display.newCircle(display.contentCenterX,display.contentCenterY,100)
+    circle1.alpha = 0
+    -- hide the circle
+    physics.addBody(circle1, "static", {radius = 100})
+    circle1.isSensor = true
+    
+    
+    
+    -- add collision event
+    local function circleCollision (event)
+       if(event.phase == "began") then
+          print("CIRCLE1")
+          print(event.other)
+          print(playerChar)
+    
+    
+          local overlayOptions = { -- options for scene overlay
+             effect = "fade",
+             time = 500,
+             isModal = true,
+             params = {
+                nextScene = "scene5",
+                currScene = "scene6",
+                pokemon = "bulbasaur"
+             }
+          }
+    
+          -- draw battle button
+          local function handleButtonEvent( buttonEvent )
+             if("ended" == buttonEvent.phase) then
+                composer.showOverlay("battleScene", overlayOptions)
+             end
+          end
+    
+    
+    
+          local battleButton = widget.newButton(
+             {
+                left = display.contentCenterX - 100,
+                top = display.contentCenterY + 200,
+                id = "battleButton",
+                shape = "roundedRect",
+                label = "BATTLE",
+                onEvent = handleButtonEvent
+             }
+          )
+    
+    
+       end
+    end
+    
+    circle1:addEventListener("collision", circleCollision)
+    -- call the battle scene overlay here if the radius is encountered at a certain x and y positions
+    
+    
+    
+
 
    playerChar = player:new({x=display.contentCenterX, y=display.contentCenterY, inWater=false})
    playerChar:spawn()
