@@ -194,7 +194,7 @@ circle1:addEventListener("collision", circleCollision)
         obstacle6.y = background.y
      
         physics.addBody(obstacle6, "static", {outline = obstaclesOutline6, density=500})
-         world:insert(obstacle6)
+        world:insert(obstacle6)
 
 
    sceneGroup:insert(playerChar.sprite)

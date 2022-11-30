@@ -342,7 +342,7 @@ local defendButton = widget.newButton(
       onEvent = handleDefendButtonEvent
    }
 )
-
+composer.hideOverlay( "fade", 400 )
 end
  
 -- "scene:show()"
