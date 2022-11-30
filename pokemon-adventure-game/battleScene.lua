@@ -195,12 +195,13 @@ end -- end function
 
 local attackButton = widget.newButton(
    {
-      left = display.contentCenterX - 200,
+      left = display.contentCenterX - 140,
       top = display.contentCenterY + 170,
       id = "attackButton",
       shape = "roundedRect",
       label = "ATTACK",
-      cornerRadius = 2,
+      width = 100,
+      cornerRadius = 9,
       fillColor = {default={0,1,0,1}, over={1,1,0.4,0.2}},
       onEvent = handleAttackButtonEvent
    }
@@ -208,12 +209,13 @@ local attackButton = widget.newButton(
 
 local defendButton = widget.newButton(
    {
-      left = display.contentCenterX + 20,
+      left = display.contentCenterX + 40,
       top = display.contentCenterY + 170,
       id = "defendButton",
       shape = "roundedRect",
       label = "DEFEND",
-      cornerRadius = 2,
+      width = 100,
+      cornerRadius = 9,
       fillColor = {default={0,1,0,1}, over={1,1,0.4,0.2}},
       onEvent = handleDefendButtonEvent
    }
