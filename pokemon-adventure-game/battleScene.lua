@@ -31,14 +31,29 @@ function scene:create( event )
 
    local sceneGroup = self.view
 
-   local parent = event.parent -- reference to parent object
+   local params = event.params -- reference to parent object
 
    local background = display.newRect(display.contentCenterX, display.contentCenterY, 500,500)
-   print("IN BATTLE SCENE OVERLAY ")
    -- add the attack button and functionality
    -- add the health bars for enemy and player's pokemon
 
-   print(parent)
+   function goToNextScene()
+
+      local nextOptions = {
+         effect = "fade",
+         time = 500
+      }
+      composer.gotoScene(params.nextScene, nextOptions)
+   end
+
+   function goToPreviousScene()
+
+      local prevOptions = {
+         effect = "fade",
+         time = 500
+      }
+      composer.gotoScene(params.currScene, prevOptions)
+   end
 
    local playerHealthBar = widget.newProgressView(
       {
@@ -56,7 +71,7 @@ function scene:create( event )
          left = display.contentCenterX + 60,
          top = display.contentCenterY - 180,
          width = 50,
-         isAnimated = true 
+         isAnimated = true
       }
    )
    enemyHealthBar:setProgress(1)
@@ -159,12 +174,12 @@ local function handleAttackButtonEvent( event )
          playerDeath()
       end
       composer.hideOverlay("battleScene", 400)
-      parent:goToPreviousScene() -- uses parent function in scene 5
+      goToPreviousScene() -- uses parent function in scene 5
       -- and restart the scene
    end
    if(enemyHealthBar:getProgress()  <= 0) then -- if player dies, decrement lives
       composer.hideOverlay("battleScene", 400)
-      parent:goToNextScene() -- uses parent function in scene 5
+      goToNextScene() -- uses parent function in scene 5
       -- go to the scene7
    end
 end -- end function
@@ -183,7 +198,7 @@ local function handleDefendButtonEvent( event )
       numOfLives = numOfLives - 1
       composer.hideOverlay("battleScene", 400)
       -- and restart the scene
-      parent:goToPreviousScene() -- uses parent function in scene 5
+      goToPreviousScene() -- uses parent function in scene 5
 
    end
    if(enemyHealthBar:getProgress()  <= 0) then -- if player dies, decrement lives

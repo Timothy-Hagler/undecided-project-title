@@ -35,23 +35,6 @@ function scene:create( event )
 	world = display.newGroup()
 
 
-   function scene:goToNextScene()
-
-      local nextOptions = {
-         effect = "fade",
-         time = 500
-      }
-      composer.gotoScene("scene7", nextOptions)
-   end
-
-   function scene:goToPreviousScene()
-
-      local prevOptions = {
-         effect = "fade",
-         time = 500
-      }
-      composer.gotoScene("scene6", prevOptions)
-   end
 
 
 
@@ -89,9 +72,12 @@ local function circleCollision (event)
       local overlayOptions = { -- options for scene overlay
          effect = "fade",
          time = 500,
-         isModal = true
+         isModal = true,
+         params = {
+            nextScene = "scene5",
+            currScene = "scene6"
+         }
       }
-
 
       -- draw battle button
       local function handleButtonEvent( buttonEvent )
