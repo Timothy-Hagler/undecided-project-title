@@ -189,11 +189,8 @@ function scene:create(event)
 
 	musicTrack = audio.loadStream("audio/caveMusic.mp3")
 
-	-- playerChar.sprite.collision = onPlayerCollision
-	-- playerChar.sprite:addEventListener("collision")
-
 	updateSavedGame()
-	--Runtime:addEventListener("collision", onGlobalCollision)	-- global collision
+
 end
 
 local function setupCamera(playerChar, world)
@@ -224,7 +221,7 @@ function scene:show(event)
 		-- Insert code here to make the scene come alive.
 		-- Example: start tieers, begin animation, play audio, etc.
 		camera:track() -- Begin auto-tracking
-		-- audio.play( musicTrack, { channel=1, loops=-1 } )
+		audio.play( musicTrack, { channel=1, loops=-1 } )
 
 	end
 end
