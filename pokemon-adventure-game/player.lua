@@ -57,6 +57,7 @@ function Player:spawn()
 		self.sprite:setSequence("surfForward")
 	end
 	self.linearDamping = self.damping
+	physics.setReportCollisionsInContentCoordinates( false ) -- ensure collision coords are relative to display object and not content Coords
 end
 
 function Player:InitiateBattle()
@@ -66,8 +67,10 @@ end
 function Player:StopMoving()
     self.sprite:pause()
 	 self.sprite.linearDamping = self.damping
+	 if self.motionTimer then timer.cancel( self.motionTimer ) end
     self.sprite:setLinearVelocity(0, 0)
 end
+
 
 function Player:move(xvel, yvel, phase)
 	if ( self.movementEnabled ) then
@@ -97,7 +100,9 @@ function Player:move(xvel, yvel, phase)
 			self.sprite:setSequence(self.sprite.seq)
 			self.sprite:play()
 		end
-		self.sprite:setLinearVelocity(xvel, yvel)	-- #TODO: changing this to impulse-based motion would work better for boulder collision, but this will work ok as-is
+
+		if self.motionTimer then timer.cancel( self.motionTimer ) end
+		self.motionTimer = timer.performWithDelay(0, function() self.sprite:setLinearVelocity(xvel, yvel) end, 0);
 		self.sprite.linearDamping = 0
 	end
 end

@@ -58,7 +58,6 @@ function scene:create( event )
 	local lTerrain = obstacle:new({ img=sheet, imgIdx=1, outline=outline, bodyType="static",
 		x=display.contentCenterX, y=display.contentCenterY })
 	lTerrain:spawn()
-	lTerrain.bounce = 0
 	world:insert(lTerrain.sprite)
 
    sheet = graphics.newImageSheet("images/map1_right_terrain.png", Options) 

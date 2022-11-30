@@ -1,4 +1,4 @@
-local Obstacle = {tag="Obstacle", img=nil, imgIdx=nil, outline=nil, x = 0, y = 0, 
+local Obstacle = {tag="obstacle", img=nil, imgIdx=nil, outline=nil, x = 0, y = 0, 
 	bodyType="dynamic", collisionType="all", bounce=0, triggerFxn = nil};
 local aboveCollisionOnly, belowCollisionOnly
 
@@ -49,28 +49,24 @@ function aboveCollisionOnly( self, event)
 end
 
 function belowCollisionOnly( self, event)
-	print(self.y..", "..event.y)
-	print("\t"..self.x..", "..event.x)
-	print("\twidth: "..self.width)
-	print("\t"..event.other.x.." , "..event.other.y)
-	if ( event.y > 4 and math.abs(event.x) - self.width/2 < 5  ) then -- self.y > other.y --> colliding below object --> ignore collision
+	if ( event.y > 4 and event.y < 100 ) then	 -- self.y > other.y --> colliding below object --> ignore collision. <100 added to avoid bugs
+		-- print(event.target.pp.tag)	-- #DEBUG
+		-- print(event.x..", "..event.y)
 		if not event.other.transitioning then
 			event.contact.isEnabled = false
-
 			event.other.IsBodyActive = false -- disable for tranition
 			event.other.transitioning = true
 			if ( event.other.tag=="player" ) then
 				event.other:stopMoving()
 			end
 			transition.moveBy( event.other, {y=30, time=500, onComplete=
-				function() 
+				function()
 					event.other.isBodyActive=true
 					event.other.transitioning=nil
 					event.other:setLinearVelocity(0,0)
 				end } )
-			end
 		end
-
+	end
 end
 
 function genericTrigger( self, event )
