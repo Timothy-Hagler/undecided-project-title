@@ -8,10 +8,9 @@ local musicTrack
  
 physics.start()
 physics.setGravity(0,0)
-physics.setDrawMode("hybrid")
 local camera, world
 if playerChar == nil then
-   playerChar = player:new({x=display.contentCenterX, y=display.contentCenterY, inWater=true})
+   playerChar = player:new({x=display.contentCenterX, y=display.contentCenterY, inWater=true, tag = "player"})
 else
    playerChar.inWater = true
 end
@@ -44,6 +43,86 @@ function scene:create( event )
       }
       composer.gotoScene("scene5", options)
    end
+
+
+
+   
+   -- add random pokemon enemy generator
+   -- create a sprite object and then do a physics.addBody on int1Sheet
+   -- make the enemy a kinematic object that randomy attacks and defends
+   -- grab the movement from the scene5 and add it in the overlay scene
+
+   -- put the sprites onto the screen
+
+   -- put the trainer and pikachu in a group and then put the enemies in a group
+
+   -- 1 add phyiscs bodies and outlines to the sprites
+
+
+
+--local circle1 = display.newCircle(display.contentCenterX + 610,display.contentCenterY - 390,100)
+local circle1 = display.newCircle(display.contentCenterX,display.contentCenterY,100)
+
+circle1:setFillColor(1,0,0)
+physics.addBody(circle1, "static", {radius = 100})
+circle1.isSensor = true
+
+
+
+-- add collision event
+local function circleCollision (event)
+   if(event.phase == "began") then
+      print("CIRCLE1")
+      print(event.other)
+      print(playerChar)
+
+
+      local overlayOptions = {
+         effect = "fade",
+         time = 500,
+         isModal = true
+      }
+
+
+      -- draw battle button
+      local function handleButtonEvent( event )
+
+         if("ended" == event.phase) then
+            -- call the battleScene.lua overlay
+            print("battleSceneOverlay")
+            composer.showOverlay("battleScene", overlayOptions)
+         end
+      end
+
+
+
+      local battleButton = widget.newButton(
+         {
+            left = display.contentCenterX - 100,
+            top = display.contentCenterY + 200,
+            id = "battleButton",
+            shape = "roundedRect",
+            label = "BATTLE",
+            onEvent = handleButtonEvent
+         }
+      )
+
+
+      --add event Listener
+
+      -- if clicked call the battleScene overlay
+
+         --if(event.other == playerChar) then
+          --  print("ASH")
+     -- end
+   end
+end
+
+circle1:addEventListener("collision", circleCollision)
+-- call the battle scene overlay here if the radius is encountered at a certain x and y positions
+
+
+
 
    local backgroundWater = display.newImage("images/map3smallwater.png")
    backgroundWater.x = display.contentCenterX
@@ -182,6 +261,7 @@ function scene:create( event )
 
    timer.performWithDelay(0,updatePlayerRotation,-1)
    updateSavedGame()
+   world:insert(circle1)
    --Runtime:addEventListener("collision", onGlobalCollision)	-- global collision
 end
 
@@ -209,7 +289,7 @@ function scene:show( event )
       -- Insert code here to make the scene come alive.
       -- Example: start timers, begin animation, play audio, etc.
 		camera:track() -- Begin auto-tracking
-      audio.play( musicTrack, { channel=1, loops=-1 } )
+     -- audio.play( musicTrack, { channel=1, loops=-1 } )
 
    end
 end

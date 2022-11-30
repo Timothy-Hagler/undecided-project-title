@@ -21,17 +21,176 @@ local function playerDeath()
          time = 500
       }
 
-      composer.gotoScene("mainmenu", options)
+   composer.gotoScene("mainmenu", options)
 
+   end
 end
 
 -- "scene:create()"
 function scene:create( event )
  
    local sceneGroup = self.view
- 
+
+   local background = display.newRect(display.contentCenterX, display.contentCenterY, 500,500)
+   print("IN BATTLE SCENE OVERLAY ")
+   -- add the attack button and functionality
+   -- add the health bars for enemy and player's pokemon
 
 
+
+   local playerHealthBar = widget.newProgressView(
+      {
+         left = display.contentCenterX - 120,
+         top = display.contentCenterY - 200,
+         width = 50,
+         isAnimated = true
+      }
+   )
+   playerHealthBar:setProgress(1) -- 1 = 100%
+
+
+   local enemyHealthBar = widget.newProgressView(
+      {
+         left = display.contentCenterX + 100,
+         top = display.contentCenterY - 200,
+         width = 50,
+         isAnimated = true 
+      }
+   )
+   enemyHealthBar:setProgress(1)
+
+   -- insert charmander sprite and pikachu sprite
+   
+-- charmander (enemy)
+
+local charOpt = 
+{
+   frames = {
+   {x = 44, y = 136, width = 76, height = 84}, -- 1. full char
+   {x = 181, y = 109, width = 42, height = 36}, -- 2. mini char sprite
+   {x = 16, y = 269, width = 22, height = 32}, -- 3. char forward walk 1
+   {x = 80, y = 271, width = 22, height = 32}, -- 4. char forward walk 2
+   {x = 144, y = 269, width = 22, height = 32}, -- 5. char forward walk 3
+   {x = 208, y = 271, width = 22, height = 32}, -- 6. char forward walk 4
+   {x = 6, y = 333, width = 36, height = 32}, -- 7. char side run 1
+   {x = 70, y = 335, width = 36, height = 32}, -- 8. char side run 2
+   {x = 134, y = 333, width = 38, height = 32}, -- 9. char side run 3
+   {x = 198, y = 335, width = 38, height = 32}, -- 10. char side run 4
+   {x = 14, y = 397, width = 36, height = 32}, -- 11. char right 1
+   {x = 78, y = 399, width = 36, height = 32}, -- 12. char right 2
+   {x = 140, y = 397, width = 38, height = 32}, -- 13. char right 3
+   {x = 204, y = 399, width = 38, height = 32}, -- 14. char right 4
+ }
+}
+
+local charSheet = graphics.newImageSheet("spritesheets/charmander.png", charOpt)
+
+-- create the sequence table
+local charSequenceData = 
+{
+  { name = "attack", frames = {3,4,5,6}, time = 200, loopCount = 0},
+  { name = "run", frames = {7,8,9,10}, time = 200, loopCount = 0},
+  { name = "defend", frames = {11,12,13,14}, time = 200, loopCount = 0}
+}
+
+local charSprite = display.newSprite(charSheet, charSequenceData)
+
+charSprite.x = display.contentCenterX + 80
+charSprite.xScale = 2.5
+charSprite.y = display.contentCenterY - 100
+charSprite.yScale = 2.5
+
+
+   -- friend (pikachu)
+   local pikachuOpt = 
+   {
+      frames = 
+      {
+      {x = 6, y = 26, width = 36, height = 28}, -- attack
+      {x = 52, y = 28, width = 36, height = 28},
+      {x = 102, y = 25, width = 36, height = 28}
+      }
+   }
+
+   
+   local pikachuSheet = graphics.newImageSheet("spritesheets/pikachu.png", pikachuOpt)
+
+   -- create the sequence table
+   local pikachuSequenceData = 
+   {
+      { name = "attack", frames = {1, 2, 3}, time = 200, loopCount = 0},
+      { name = "run", frames = {7, 8, 9, 10}, time = 200, loopCount = 0},
+      { name = "defend", frames = {11, 12, 13, 14}, time = 200, loopCount = 0}
+   }
+
+   local pikachuSprite = display.newSprite(pikachuSheet, pikachuSequenceData)
+
+pikachuSprite.x = display.contentCenterX - 80
+pikachuSprite.y = display.contentCenterY + 120
+
+pikachuSprite.xScale = 4
+pikachuSprite.yScale = 4
+   
+
+-- create attack and defend randomizer for the enemy
+local function randAttackOrDefend()
+   return math.random(0,1)
+end
+
+
+
+-- draw attack and defend buttons
+local function handleAttackButtonEvent( event )
+   local randNum = randAttackOrDefend() -- defend = 1 attack = 0
+   if("ended" == event.phase) then
+      if(randNum == 1) then -- if the enemy defends against player attack
+         enemyHealthBar:setProgress(enemyHealthBar:getProgress() - 0.10)
+      else
+         playerHealthBar:setProgress(playerHealthBar:getProgress() - 0.20) -- player loses health if enemy hits
+         enemyHealthBar:setProgress(enemyHealthBar:getProgress() - 0.20)
+      end -- end else
+   end -- end if
+end -- end function
+
+local function handleDefendButtonEvent( event )
+   local randNum = randAttackOrDefend() -- defend = 1 attack = 0
+   if("ended" == event.phase) then
+      if(randNum == 0) then -- if the enemy attacks 
+         playerHealthBar:setProgress(playerHealthBar:getProgress() - 0.10)
+      else
+         -- nothing happens if they both defend because it is countered
+      end -- end else
+   end -- end if
+end -- end function
+
+
+-- create attack and defend buttons
+
+local attackButton = widget.newButton(
+   {
+      left = display.contentCenterX - 200,
+      top = display.contentCenterY + 170,
+      id = "attackButton",
+      shape = "roundedRect",
+      label = "ATTACK",
+      cornerRadius = 2,
+      fillColor = {default={0,1,0,1}, over={1,1,0.4,0.2}},
+      onEvent = handleAttackButtonEvent
+   }
+)
+
+local defendButton = widget.newButton(
+   {
+      left = display.contentCenterX + 20,
+      top = display.contentCenterY + 170,
+      id = "defendButton",
+      shape = "roundedRect",
+      label = "DEFEND",
+      cornerRadius = 2,
+      fillColor = {default={0,1,0,1}, over={1,1,0.4,0.2}},
+      onEvent = handleDefendButtonEvent
+   }
+)
 
 
 
