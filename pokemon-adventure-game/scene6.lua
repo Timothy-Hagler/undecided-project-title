@@ -13,6 +13,7 @@ if playerChar == nil then
    playerChar = player:new({x=display.contentCenterX, y=display.contentCenterY, inWater=true, tag = "player"})
 else
    playerChar.inWater = true
+   playerChar.y = display.contentCenterY
 end
 playerChar:spawn()
 local player_velocity_scale = 150

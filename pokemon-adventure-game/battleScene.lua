@@ -158,6 +158,46 @@ pikachuSprite.yScale = 4
 
 if(params.pokemon == "bulbasaur") then
 
+        -- bulbasaur (friend)
+        local bulbOpt = 
+        {
+           frames =
+           {
+           {x = 39, y = 119, width = 70, height = 66}, -- 1. full bulb
+           {x = 183, y = 91, width = 40, height = 34}, -- 2. mini bulb sprite
+           {x = 365, y = 197, width = 51, height = 36}, -- 3. bulb back (color from background might be included oops
+           {x = 12, y = 271, width = 30, height = 32}, -- 4. bulb forward walk 1
+           {x = 76, y = 273, width = 30, height = 32}, -- 5. bulb forward walk 2
+           {x = 140, y = 271, width = 30, height = 32}, -- 6. bulb forward walk 3
+           {x = 204, y = 273, width = 30, height = 32}, -- 7. bulb forward walk 4
+           {x = 8, y = 335, width = 38, height = 30}, -- 8. bulb side run 1
+           {x = 72, y = 337, width = 38, height = 30}, -- 9. bulb side run 2
+           {x = 136, y = 335, width = 38, height = 30}, -- 10. bulb side run 3
+           {x = 10, y = 399, width = 38, height = 30}, -- 12. bulb right 1
+           {x = 74, y = 401, width = 38, height = 30}, -- 13. bulb right 2
+           {x = 138, y = 399, width = 38, height = 30}, -- 14. bulb right 3
+           {x = 202, y = 401, width = 38, height = 30}, -- 15. bulb right 4
+           }
+        }
+     
+        local bulbSheet = graphics.newImageSheet("spritesheets/bulbasaur.png",bulbOpt)
+     
+       -- create the sequence table
+        local bulbSequenceData = 
+        {
+           { name = "attack", frames = {4, 5, 6, 7}, time = 200, loopCount = 0},
+           { name = "run", frames = {8, 9, 10}, time = 200, loopCount = 0},
+           { name = "defend", frames = {12, 13, 14, 15}, time = 200, loopCount = 0}
+        }
+     
+        local bulbSprite = display.newSprite(bulbSheet, bulbSequenceData)
+     
+        bulbSprite.x = display.contentCenterX + 80
+        bulbSprite.xScale = 2.5
+        bulbSprite.y = display.contentCenterY - 100           
+        bulbSprite.yScale = 2.5
+
+    
 end
 
 if(params.pokemon == "squirtle") then
@@ -190,15 +230,17 @@ local squirtleSheet = graphics.newImageSheet("spritesheets/squirtle.png", squirt
 -- create the sequence table
 local squirtleSequenceData = 
 {
-{ name = "attack", frames = {3, 4, 5, 6}, time = 200, loopCount = 0},
-{ name = "run", frames = {7, 8, 9, 10}, time = 200, loopCount = 0},
-{ name = "defend", frames = {11, 12, 13, 14}, time = 200, loopCount = 0}
+   { name = "attack", frames = {3, 4, 5, 6}, time = 200, loopCount = 0},
+   { name = "run", frames = {7, 8, 9, 10}, time = 200, loopCount = 0},
+   { name = "defend", frames = {11, 12, 13, 14}, time = 200, loopCount = 0}
 }
 
 local squirtleSprite = display.newSprite(squirtleSheet, squirtleSequenceData)
 
-squirtleSprite.x = display.contentCenterX + 50
-squirtleSprite.y = display.contentCenterY - 50
+squirtleSprite.x = display.contentCenterX + 80
+squirtleSprite.xScale = 2.5
+squirtleSprite.y = display.contentCenterY - 100
+squirtleSprite.yScale = 2.5
 
 
 end
