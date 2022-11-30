@@ -1,4 +1,4 @@
-local Player = {tag="player", HP=1, xPos=0, yPos=0, prevXForce=0, prevYForce=0, inWater=false, movementEnabled=true};
+local Player = {tag="player", HP=1, damping=5, inWater=false, movementEnabled=true};
 
 local options =
 {
@@ -50,11 +50,13 @@ function Player:spawn()
 	self.sprite.pp = self;  -- parent object
     self.sprite.seq = "forward"
 	local outline = graphics.newOutline(1, sheet, 1);
-	physics.addBody(self.sprite, "dynamic", {outline=outline, bounciness=0});
+	physics.addBody(self.sprite, "dynamic", {outline=outline, bounce=0.2 });
+	self.sprite.gravityScale = 0
+	self.sprite.isFixedRotation = true
 	if (self.inWater) then
 		self.sprite:setSequence("surfForward")
 	end
-
+	self.linearDamping = self.damping
 end
 
 function Player:InitiateBattle()
@@ -63,6 +65,7 @@ end
 
 function Player:StopMoving()
     self.sprite:pause()
+	 self.sprite.linearDamping = self.damping
     self.sprite:setLinearVelocity(0, 0)
 end
 
@@ -95,6 +98,7 @@ function Player:move(xvel, yvel, phase)
 			self.sprite:play()
 		end
 		self.sprite:setLinearVelocity(xvel, yvel)	-- #TODO: changing this to impulse-based motion would work better for boulder collision, but this will work ok as-is
+		self.sprite.linearDamping = 0
 	end
 end
 
