@@ -315,34 +315,14 @@ local function circleCollision (event)
          time = 500,
          isModal = true,
          params = {
-            nextScene = "scene5",
-            currScene = "scene6",
+            nextScene = "scene8",
+            currScene = "scene1",
             pokemon = "charmander",
             numOfLives = numOfLives,
          }
       }
+      circle1:removeEventListener("collision", circleCollision)
       composer.showOverlay("battleScene", overlayOptions)
-
-      --[[ -- draw battle button
-      local function handleButtonEvent( buttonEvent )
-         if("ended" == buttonEvent.phase) then
-            composer.showOverlay("battleScene", overlayOptions)
-         end
-      end
-
-
-
-      local battleButton = widget.newButton(
-         {
-            left = display.contentCenterX - 100,
-            top = display.contentCenterY + 200,
-            id = "battleButton",
-            shape = "roundedRect",
-            label = "BATTLE",
-            onEvent = handleButtonEvent
-         }
-      )
- ]]
    end
 end
     

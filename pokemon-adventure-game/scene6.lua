@@ -76,6 +76,7 @@ local function circleCollision (event)
             pokemon = "charmander"
          }
       }
+      circle1:removeEventListener("collision", circleCollision)
       composer.showOverlay("battleScene", overlayOptions)
 		timer.cancelAll()
    end
@@ -248,7 +249,7 @@ function scene:show( event )
    elseif ( phase == "did" ) then
       -- Called when the scene is now on screen.
       -- Insert code here to make the scene come alive.
-      -- Example: start timers, begin animation, play audio, etc.
+      -- Example: start tieers, begin animation, play audio, etc.
 		camera:track() -- Begin auto-tracking
      -- audio.play( musicTrack, { channel=1, loops=-1 } )
 
@@ -267,7 +268,7 @@ function scene:hide( event )
 
    elseif ( phase == "did" ) then
       -- Called immediately after scene goes off screen.
-		camera:destroy()
+		--camera:destroy()
       composer.removeScene("scene6", false)
    end
 end
