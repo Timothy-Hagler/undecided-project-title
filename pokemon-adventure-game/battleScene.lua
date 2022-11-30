@@ -79,7 +79,7 @@ function scene:create( event )
    -- insert charmander sprite and pikachu sprite
    
 -- charmander (enemy)
-
+if(params.pokemon == "charmander") then
 local charOpt = 
 {
    frames = {
@@ -116,6 +116,8 @@ charSprite.x = display.contentCenterX + 80
 charSprite.xScale = 2.5
 charSprite.y = display.contentCenterY - 100
 charSprite.yScale = 2.5
+end
+
 
 
    -- friend (pikachu)
@@ -147,7 +149,18 @@ pikachuSprite.y = display.contentCenterY + 120
 
 pikachuSprite.xScale = 4
 pikachuSprite.yScale = 4
+  
+
+
+if(params.pokemon == "bulbasaur") then
+
+end
+
+if(params.pokemon == "squirtle") then
    
+end
+
+
 
 -- create attack and defend randomizer for the enemy
 local function randAttackOrDefend()
@@ -244,10 +257,6 @@ local defendButton = widget.newButton(
       onEvent = handleDefendButtonEvent
    }
 )
-
-
-
-
 
 end
  

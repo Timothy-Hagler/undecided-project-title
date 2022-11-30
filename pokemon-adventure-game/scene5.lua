@@ -4,11 +4,11 @@ local perspective = require( "lib.perspective.perspective" )
 local scene = composer.newScene()
 local player = require( "player" )
 local obstacle = require( "obstacle" )
+local widget = require("widget")
 local musicTrack
 
 physics.start()
 physics.setGravity(0,0)
-physics.setDrawMode("hybrid")
 local camera, world
 if playerChar == nil then
    playerChar = player:new({x=display.contentCenterX, y=display.contentCenterY, inWater=false})
@@ -158,7 +158,6 @@ function scene:create( event )
    physics.addBody(boulderGoal, "dynamic", {outline = boulderGoalOutline});
 
 
-
    -- bulbasaur (friend)
    local bulbOpt = 
    {
@@ -186,13 +185,79 @@ function scene:create( event )
   -- create the sequence table
    local bulbSequenceData = 
    {
-      { name = "attack", frames = {4, 5, 6, 7}, time = 200, loopCount = 0},
-      { name = "run", frames = {8, 9, 10}, time = 200, loopCount = 0},
-      { name = "defend", frames = {12, 13, 14, 15}, time = 200, loopCount = 0}
+      { name = "attack", frames = {4, 5, 6, 7}, time = 200, loopCount = 0}
    }
 
    local bulbSprite = display.newSprite(bulbSheet, bulbSequenceData)
+   bulbSprite.x = display.contentCenterX
+   bulbSprite.y = display.contentCenterY
 
+   local circle1 = display.newCircle(display.contentCenterX + 50 ,display.contentCenterY - 40 ,30)
+   circle1:setFillColor(1,0,0)
+   --local circle1 = display.newCircle(display.contentCenterX,display.contentCenterY,100)
+   --circle1.alpha = 0
+   -- hide the circle
+   physics.addBody(circle1, "static", {radius = 100})
+   circle1.isSensor = true
+   
+   
+   
+   -- add collision event
+   local function circleCollision (event)
+      if(event.phase == "began") then
+         print("CIRCLE1")
+         print(event.other)
+         print(playerChar)
+   
+   
+         local overlayOptions = { -- options for scene overlay
+            effect = "fade",
+            time = 500,
+            isModal = true,
+            params = {
+               nextScene = "scene6",
+               currScene = "scene5",
+               pokemon = "bulbasaur"
+            }
+         }
+   
+         -- draw battle button
+         local function handleButtonEvent2( buttonEvent )
+            if("ended" == buttonEvent.phase) then
+               -- call the battleScene.lua overlay
+               print("battleSceneOverlay")
+               composer.showOverlay("battleScene", overlayOptions)
+            end
+         end
+   
+   
+   
+         local battleButton2 = widget.newButton(
+            {
+               left = display.contentCenterX - 100,
+               top = display.contentCenterY + 200,
+               id = "battleButton",
+               shape = "roundedRect",
+               label = "BATTLE",
+               onEvent = handleButtonEvent
+            }
+         )
+   
+   
+         --add event Listener
+   
+         -- if clicked call the battleScene overlay
+   
+            --if(event.other == playerChar) then
+             --  print("ASH")
+        -- end
+      end
+   end
+   
+   circle1:addEventListener("collision", circleCollision)
+   -- call the battle scene overlay here if the radius is encountered at a certain x and y positions
+   
+   
 
 -- squirtle (enemy)
    local squirtleOpt = 
