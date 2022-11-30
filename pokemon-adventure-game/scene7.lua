@@ -214,6 +214,28 @@ local obstacle3 = display.newImage(obstacleFull3)
                physics.addBody(ledge7, "static", {outline = ledgeOutline7, density=500})
                 world:insert(ledge7)
 
+                local ledgeFull8 = "images/gymLedge8.png"
+                local ledgeOutline8 = graphics.newOutline(2, ledgeFull8)
+                local ledge8 = display.newImage(ledgeFull8)
+                
+                
+                ledge8.x = background.x
+                ledge8.y = background.y
+             
+                physics.addBody(ledge8, "static", {outline = ledgeOutline8, density=500})
+                 world:insert(ledge8)
+
+                 local ledgeFull9 = "images/gymLedge9.png"
+                 local ledgeOutline9 = graphics.newOutline(2, ledgeFull9)
+                 local ledge9 = display.newImage(ledgeFull9)
+                 
+                 
+                 ledge9.x = background.x
+                 ledge9.y = background.y
+              
+                 physics.addBody(ledge9, "static", {outline = ledgeOutline9, density=500})
+                  world:insert(ledge9)
+
     local bulbOptions =
     {
         frames = {
