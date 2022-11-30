@@ -5,6 +5,8 @@ local widget = require("widget")
 local scene = composer.newScene()
 local player = require("player")
 local musicTrack
+local numOfLives = 3
+
  
 physics.start()
 physics.setGravity(0,0)
@@ -75,7 +77,8 @@ local function circleCollision (event)
          params = {
             nextScene = "scene5",
             currScene = "scene6",
-            pokemon = "charmander"
+            pokemon = "charmander",
+            numOfLives = numOfLives,
          }
       }
       composer.showOverlay("battleScene", overlayOptions)

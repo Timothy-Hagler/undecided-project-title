@@ -9,6 +9,8 @@ local widget = require("widget")
 local camera, world, playerChar
 local player_velocity_scale = 150
 worldTable = {}
+local numOfLives = 3
+
 
 local function updateSavedGame()
    local path = system.pathForFile("save.csv", system.DocumentsDirectory)
@@ -310,7 +312,8 @@ local function circleCollision (event)
          params = {
             nextScene = "scene5",
             currScene = "scene6",
-            pokemon = "charmander"
+            pokemon = "charmander",
+            numOfLives = numOfLives,
          }
       }
       composer.showOverlay("battleScene", overlayOptions)

@@ -2,7 +2,6 @@ local composer = require( "composer" )
 local widget = require("widget")
 local player = require("player")
 local scene = composer.newScene()
-local numOfLives = 0
 
 local enemy, playerChar, background
 -- import sprites(inherit player sprite and create enemy.lua file for enemy sprites)-- enemy 1 and enemy2
@@ -28,10 +27,10 @@ end
 
 -- "scene:create()"
 function scene:create( event )
-
    local sceneGroup = self.view
 
    local params = event.params -- reference to parent object
+   local numOfLives = params.numOfLives
 
    local background = display.newRect(display.contentCenterX, display.contentCenterY, 500,500)
    -- add the attack button and functionality
