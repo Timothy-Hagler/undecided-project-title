@@ -223,6 +223,7 @@ function scene:create( event )
                pokemon = "squirtle"
             }
          }
+         circle1:removeEventListener("collision", circleCollision)
          composer.showOverlay("battleScene", overlayOptions)
    
          -- draw battle button
@@ -280,7 +281,6 @@ function scene:create( event )
 
    world:insert(squirtleSprite)
 
-   
    sceneGroup:insert(boulderGoal)
 	world:insert(boulderGoal)
 
@@ -337,6 +337,7 @@ local success = audio.loadSound("audio/success.mp3")
       	effect = "fade",
       	time = 500
    	}
+		timer.cancelAll()
    	composer.gotoScene("scene6", options)
 	end
 

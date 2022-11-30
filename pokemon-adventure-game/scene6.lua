@@ -75,6 +75,7 @@ local function circleCollision (event)
          }
       }
       composer.showOverlay("battleScene", overlayOptions)
+		timer.cancelAll()
    end
 end
 

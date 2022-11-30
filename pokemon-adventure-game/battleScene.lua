@@ -21,7 +21,7 @@ local function playerDeath()
          time = 500
       }
 
-   composer.gotoScene("mainmenu", options) -- gameover if all lives lost
+   composer.gotoScene("scene1", options) -- gameover if all lives lost
 
    
 end
@@ -271,13 +271,13 @@ local function handleAttackButtonEvent( event )
       if(numOfLives == 0) then
          playerDeath()
       end
-      composer.hideOverlay("battleScene", 400)
       goToPreviousScene() -- uses parent function in scene 5
+      composer.hideOverlay("fade")
       -- and restart the scene
    end
    if(enemyHealthBar:getProgress()  <= 0) then -- if player dies, decrement lives
-      composer.hideOverlay("battleScene", 400)
       goToNextScene() -- uses parent function in scene 5
+      composer.hideOverlay("fade")
       -- go to the scene7
    end
 end -- end function
@@ -294,14 +294,14 @@ local function handleDefendButtonEvent( event )
 -- check for health status
    if(playerHealthBar:getProgress() <= 0) then -- if player dies, decrement lives
       numOfLives = numOfLives - 1
-      composer.hideOverlay("battleScene", 400)
       -- and restart the scene
       goToPreviousScene() -- uses parent function in scene 5
+      composer.hideOverlay("fade")
 
    end
    if(enemyHealthBar:getProgress()  <= 0) then -- if player dies, decrement lives
-      composer.hideOverlay("battleScene", 400)
-      parent:goToNextScene() -- uses parent function in scene 5
+      goToNextScene() -- uses parent function in scene 5
+      composer.hideOverlay("fade")
 
       -- go to the next scene
    end

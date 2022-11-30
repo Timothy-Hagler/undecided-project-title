@@ -5,7 +5,13 @@ local scene = composer.newScene()
 local player = require("player")
 local obstacle = require("obstacle")
 local musicTrack
-local camera, world, playerChar
+local camera, world
+if playerChar == nil then
+   playerChar = player:new({x=display.contentCenterX, y=display.contentCenterY, inWater=true, tag = "player"})
+else
+   playerChar.inWater = true
+   playerChar.y = display.contentCenterY
+end
 local player_velocity_scale = 150
 worldTable = {}
 
