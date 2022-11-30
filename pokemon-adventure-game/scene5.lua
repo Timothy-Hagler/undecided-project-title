@@ -14,6 +14,8 @@ if playerChar == nil then
    playerChar = player:new({x=display.contentCenterX, y=450, inWater=false})
 else
    playerChar.inWater = false
+	playerChar.sprite.x=display.contentCenterX
+	playerChar.sprite.y=450
 end
 playerChar:spawn()
  

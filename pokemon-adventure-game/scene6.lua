@@ -188,7 +188,8 @@ end
 function scene:show( event )	
    local sceneGroup = self.view
    local phase = event.phase
-	
+	playerChar.sprite.x=display.contentCenterX
+	playerChar.sprite.y=display.contentCenterY
 	if ( phase == "will" ) then
 		--------------------------------
 		-- Camera Tracking
