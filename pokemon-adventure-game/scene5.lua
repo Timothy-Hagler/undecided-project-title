@@ -200,7 +200,7 @@ function scene:create( event )
    --local circle1 = display.newCircle(display.contentCenterX,display.contentCenterY,100)
    circle1.alpha = 0
    -- hide the circle
-   physics.addBody(circle1, "static", {radius = 100})
+   physics.addBody(circle1, "static", {radius = 30})
    circle1.isSensor = true
    world:insert(circle1)
    

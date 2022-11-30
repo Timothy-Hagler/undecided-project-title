@@ -6,10 +6,12 @@ local player = require("player")
 local obstacle = require("obstacle")
 local musicTrack
 local camera, world
+physics.start()
+physics.setGravity(0,0)
 if playerChar == nil then
-   playerChar = player:new({x=display.contentCenterX, y=display.contentCenterY, inWater=true, tag = "player"})
+   playerChar = player:new({x=display.contentCenterX, y=display.contentCenterY, inWater=false, tag = "player"})
 else
-   playerChar.inWater = true
+   playerChar.inWater = false
    playerChar.y = display.contentCenterY
 end
 local player_velocity_scale = 150
@@ -32,8 +34,6 @@ function scene:create(event)
 	local sceneGroup = self.view
 	world = display.newGroup()
 
-   physics.start()
-   physics.setGravity(0,0)
 
 	local hugeBackground = display.newImage("images/gymMap.jpg")
 	hugeBackground.x = display.contentCenterX
@@ -289,12 +289,13 @@ local obstacle3 = display.newImage(obstacleFull3)
   
 
 
-    local circle1 = display.newCircle(display.contentCenterX, display.contentCenterY, 100)
+    local circle1 = display.newCircle(bulbSprite.x, bulbSprite.y, 50)
    -- local circle1 = display.newCircle(display.contentCenterX,display.contentCenterY,100)
     circle1.alpha = 0
     -- hide the circle
-    physics.addBody(circle1, "static", {radius = 100})
+    physics.addBody(circle1, "static", {radius = 50})
     circle1.isSensor = true
+    world:insert(circle1)
     
     
     
@@ -317,7 +318,7 @@ local function circleCollision (event)
          params = {
             nextScene = "scene8",
             currScene = "scene1",
-            pokemon = "charmander",
+            pokemon = "bulbasaur",
             numOfLives = numOfLives,
          }
       }
@@ -333,7 +334,6 @@ end
     
 
 
-   playerChar = player:new({x=display.contentCenterX, y=display.contentCenterY, inWater=false})
    playerChar:spawn()
 
    sceneGroup:insert(playerChar.sprite)
@@ -461,7 +461,7 @@ function scene:hide(event)
 
 	elseif (phase == "did") then
 		-- Called immediately after scene goes off screen.
-		camera:destroy()
+		--camera:destroy()
 	end
 end
 

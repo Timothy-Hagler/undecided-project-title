@@ -71,7 +71,7 @@ local function circleCollision (event)
          time = 500,
          isModal = true,
          params = {
-            nextScene = "scene7",
+            nextScene = "scene8",
             currScene = "scene1",
             pokemon = "charmander"
          }
