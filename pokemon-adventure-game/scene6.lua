@@ -1,13 +1,23 @@
 -- Scene Composer for cave route (level 2)
 local composer = require( "composer" )
 local perspective = require( "lib.perspective.perspective" )
+local widget = require("widget")
 local scene = composer.newScene()
 local player = require("player")
 local musicTrack
  
-local camera, world, playerChar
+physics.start()
+physics.setGravity(0,0)
+physics.setDrawMode("hybrid")
+local camera, world
+if playerChar == nil then
+   playerChar = player:new({x=display.contentCenterX, y=display.contentCenterY, inWater=true})
+else
+   playerChar.inWater = true
+end
+playerChar:spawn()
 local player_velocity_scale = 150
-worldTable = {}
+local worldTable = {}
 
 local function updateSavedGame()
    local path = system.pathForFile("save.csv", system.DocumentsDirectory)
@@ -24,9 +34,15 @@ function scene:create( event )
    local sceneGroup = self.view
 	world = display.newGroup()
 
-   physics.start()
-   physics.setGravity(0,0)
-   physics.setDrawMode("hybrid")
+
+   local function goToNextScene()
+
+      local options = {
+         effect = "fade",
+         time = 500
+      }
+      composer.gotoScene("scene5", options)
+   end
 
    local backgroundWater = display.newImage("images/map3smallwater.png")
    backgroundWater.x = display.contentCenterX
@@ -117,9 +133,6 @@ function scene:create( event )
          world:insert(obstacle6)
 
 
-   playerChar = player:new({x=display.contentCenterX, y=display.contentCenterY, inWater=true})
-   playerChar:spawn()
-
    sceneGroup:insert(playerChar.sprite)
    sceneGroup:insert(world)
 
@@ -128,7 +141,6 @@ function scene:create( event )
 
 	-- Move the world wrt. the player to simulate player movement
 	local function movePlayer( event )
-		-- print(event.phase)
 		if ( event.phase == "moved" or event.phase == "began") then
 			local xvel, yvel
 			xvel = (event.x - display.contentCenterX)/(display.contentWidth/2) * player_velocity_scale
@@ -142,8 +154,6 @@ function scene:create( event )
 
    local function onGlobalCollision( event )
       transition.cancel( event.target )
-		print( "collision handler" )
-		print( event.phase )
       if ( event.phase == "began" ) then
          print("hit")
       elseif ( event.phase == "ended" ) then
@@ -199,6 +209,7 @@ function scene:show( event )
       -- Example: start timers, begin animation, play audio, etc.
 		camera:track() -- Begin auto-tracking
       audio.play( musicTrack, { channel=1, loops=-1 } )
+
    end
 end
 
@@ -215,6 +226,7 @@ function scene:hide( event )
    elseif ( phase == "did" ) then
       -- Called immediately after scene goes off screen.
 		camera:destroy()
+      composer.removeScene("scene6", false)
    end
 end
 
@@ -222,7 +234,6 @@ end
 function scene:destroy( event )
  
    local sceneGroup = self.view
-   updateSavedGame()
  
    -- Called prior to the removal of scene's view ("sceneGroup").
    -- Insert code here to clean up the scene.

@@ -48,6 +48,7 @@ function Player:spawn()
 	self.sprite.xScale, self.sprite.yScale = 1.75, 1.75
 	self.sprite.x, self.sprite.y = self.x, self.y
 	self.sprite.pp = self;  -- parent object
+    self.sprite.seq = "forward"
 	local outline = graphics.newOutline(1, sheet, 1);
 	physics.addBody(self.sprite, "dynamic", {outline=outline, bounce=0.2 });
 	self.sprite.gravityScale = 0
