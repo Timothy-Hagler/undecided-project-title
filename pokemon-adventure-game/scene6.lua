@@ -21,7 +21,6 @@ local worldTable = {}
 
 local function updateSavedGame()
    local path = system.pathForFile("save.csv", system.DocumentsDirectory)
-   print(path)
    local updatedFile = io.open(path, "w+")
    updatedFile:write('scene' .. ',' .. 'health' .. ',' .. 'lives')
    updatedFile:write('\n')
