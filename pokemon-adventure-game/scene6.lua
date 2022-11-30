@@ -78,8 +78,9 @@ local function circleCollision (event)
             pokemon = "charmander"
          }
       }
+      composer.showOverlay("battleScene", overlayOptions)
 
-      -- draw battle button
+      --[[ -- draw battle button
       local function handleButtonEvent( buttonEvent )
          if("ended" == buttonEvent.phase) then
             composer.showOverlay("battleScene", overlayOptions)
@@ -98,7 +99,7 @@ local function circleCollision (event)
             onEvent = handleButtonEvent
          }
       )
-
+ ]]
    end
 end
 

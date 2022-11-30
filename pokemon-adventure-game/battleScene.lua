@@ -271,12 +271,12 @@ local function handleAttackButtonEvent( event )
       if(numOfLives == 0) then
          playerDeath()
       end
-      composer.hideOverlay("battleScene", 400)
+      composer.hideOverlay("fade", 400)
       goToPreviousScene() -- uses parent function in scene 5
       -- and restart the scene
    end
    if(enemyHealthBar:getProgress()  <= 0) then -- if player dies, decrement lives
-      composer.hideOverlay("battleScene", 400)
+      composer.hideOverlay("fade", 400)
       goToNextScene() -- uses parent function in scene 5
       -- go to the scene7
    end
@@ -294,13 +294,13 @@ local function handleDefendButtonEvent( event )
 -- check for health status
    if(playerHealthBar:getProgress() <= 0) then -- if player dies, decrement lives
       numOfLives = numOfLives - 1
-      composer.hideOverlay("battleScene", 400)
+      composer.hideOverlay("fade", 400)
       -- and restart the scene
       goToPreviousScene() -- uses parent function in scene 5
 
    end
    if(enemyHealthBar:getProgress()  <= 0) then -- if player dies, decrement lives
-      composer.hideOverlay("battleScene", 400)
+      composer.hideOverlay( "fade", 400 )
       parent:goToNextScene() -- uses parent function in scene 5
 
       -- go to the next scene
