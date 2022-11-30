@@ -83,8 +83,6 @@ local function circleCollision (event)
       -- draw battle button
       local function handleButtonEvent( buttonEvent )
          if("ended" == buttonEvent.phase) then
-            -- call the battleScene.lua overlay
-            print("battleSceneOverlay")
             composer.showOverlay("battleScene", overlayOptions)
          end
       end
