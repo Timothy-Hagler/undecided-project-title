@@ -63,50 +63,22 @@ circle1.isSensor = true
 -- add collision event
 local function circleCollision (event)
    if(event.phase == "began") then
-      print("CIRCLE1")
-      print(event.other)
-      print(playerChar)
-
-
       local overlayOptions = { -- options for scene overlay
          effect = "fade",
          time = 500,
          isModal = true,
          params = {
-            nextScene = "scene5",
-            currScene = "scene6",
+            nextScene = "scene8",
+            currScene = "scene1",
             pokemon = "charmander"
          }
       }
-
-      -- draw battle button
-      local function handleButtonEvent( buttonEvent )
-         if("ended" == buttonEvent.phase) then
-            composer.showOverlay("battleScene", overlayOptions)
-         end
-      end
-
-
-
-      local battleButton = widget.newButton(
-         {
-            left = display.contentCenterX - 100,
-            top = display.contentCenterY + 200,
-            id = "battleButton",
-            shape = "roundedRect",
-            label = "BATTLE",
-            onEvent = handleButtonEvent
-         }
-      )
-
+      composer.showOverlay("battleScene", overlayOptions)
    end
 end
 
 circle1:addEventListener("collision", circleCollision)
 -- call the battle scene overlay here if the radius is encountered at a certain x and y positions
-
-
-
 
    local backgroundWater = display.newImage("images/map3smallwater.png")
    backgroundWater.x = display.contentCenterX

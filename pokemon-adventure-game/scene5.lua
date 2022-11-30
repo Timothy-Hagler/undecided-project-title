@@ -221,28 +221,9 @@ function scene:create( event )
                pokemon = "squirtle"
             }
          }
+         composer.showOverlay("battleScene", overlayOptions)
    
          -- draw battle button
-         local function handleButtonEvent( buttonEvent )
-            if("ended" == buttonEvent.phase) then
-               -- call the battleScene.lua overlay
-               print("battleSceneOverlay")
-               composer.showOverlay("battleScene", overlayOptions)
-            end
-         end
-   
-   
-   
-         local battleButton = widget.newButton(
-            {
-               left = display.contentCenterX - 100,
-               top = display.contentCenterY + 200,
-               id = "battleButton",
-               shape = "roundedRect",
-               label = "BATTLE",
-               onEvent = handleButtonEvent
-            }
-         )
    
    
          --add event Listener
@@ -355,22 +336,6 @@ local success = audio.loadSound("audio/success.mp3")
    	audio.resume(1)
    end
 
-   local boulderExists = true
-   local function checkBoulder()
-   	--print(boulder.sprite.x)
-   	--print(boulder.sprite.y)
-   	if boulderExists and boulder.sprite.x < 105 and boulder.sprite.y < 325 then
-   		physics.removeBody(boulder.sprite)
-   		physics.addBody(boulder.sprite, "static", {outline=boulder.outline, bounciness=0})
-   		boulder.sprite.x = 105
-   		boulder.sprite.y = 325
-   		audio.pause(1)
-   		audio.play(success)
-   		timer.performWithDelay(2750, resumeAudio, 1)
-   		boulderExists = false
-   	end
-   end
-
    local function nextGame()
    	audio.stop( 1 )
    	local options = {
@@ -380,21 +345,11 @@ local success = audio.loadSound("audio/success.mp3")
    	composer.gotoScene("scene6", options)
 	end
 
-   local function playerLeft()
-   	--print(playerChar.sprite.x, ": x")
-   	--print(playerChar.sprite.y, ": y")
-   	if playerChar.sprite.y < 38 and playerChar.sprite.x > 25 and playerChar.sprite.x < 75 then
-   		nextGame()
-   	end
-   end	
-
    Runtime:addEventListener("touch", movePlayer)
    updateSavedGame()
 	-- playerChar.sprite.collision = onPlayerCollision		-- local collison
    -- playerChar.sprite:addEventListener("collision")		-- local collision
    --Runtime:addEventListener("collision", onGlobalCollision)	-- global collision
-	timer.performWithDelay(1000,checkBoulder,-1)
-   timer.performWithDelay(500,playerLeft,-1)
 	-- playerChar.sprite.collision = onPlayerCollision		-- local collison
    -- playerChar.sprite:addEventListener("collision")		-- local collision
    --Runtime:addEventListener("collision", onGlobalCollision)	-- global collision

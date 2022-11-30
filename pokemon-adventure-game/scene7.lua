@@ -266,7 +266,7 @@ local obstacle3 = display.newImage(obstacleFull3)
 
    
 
-    local squirtleSheet = graphics.newImageSheet("spritesheets/squirtlsprites.png", squirtleOpt)
+    local squirtleSheet = graphics.newImageSheet("spritesheets/sqSprite.png", squirtleOpt)
     local squirtle = display.newImage(squirtleSheet, 4)
     squirtle.x = display.contentCenterX + 100
     squirtle.y = display.contentCenterY - 100
@@ -302,28 +302,7 @@ local obstacle3 = display.newImage(obstacleFull3)
                 pokemon = "bulbasaur"
              }
           }
-    
-          -- draw battle button
-          local function handleButtonEvent( buttonEvent )
-             if("ended" == buttonEvent.phase) then
-                composer.showOverlay("battleScene", overlayOptions)
-             end
-          end
-    
-    
-    
-          local battleButton = widget.newButton(
-             {
-                left = display.contentCenterX - 100,
-                top = display.contentCenterY + 200,
-                id = "battleButton",
-                shape = "roundedRect",
-                label = "BATTLE",
-                onEvent = handleButtonEvent
-             }
-          )
-    
-    
+            composer.showOverlay("battleScene", overlayOptions)
        end
     end
     
