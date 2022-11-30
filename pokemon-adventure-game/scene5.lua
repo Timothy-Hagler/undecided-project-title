@@ -245,13 +245,6 @@ function scene:create( event )
          )
    
    
-         --add event Listener
-   
-         -- if clicked call the battleScene overlay
-   
-            --if(event.other == playerChar) then
-             --  print("ASH")
-        -- end
       end
    end
    
