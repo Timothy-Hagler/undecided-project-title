@@ -246,7 +246,7 @@ function scene:hide(event)
 
 	elseif (phase == "did") then
 		-- Called immediately after scene goes off screen.
-		camera:cancel()
+		if camera then camera:cancel() end
 	end
 end
 
@@ -258,7 +258,7 @@ function scene:destroy(event)
 		camera = nil
 		cameraDestroyed = true
 	end
-	composer.removeScene("scene6", false)
+	-- composer.removeScene("scene6", false)
 
 	-- Called prior to the removal of scene's view ("sceneGroup").
 	-- Insert code here to clean up the scene.
