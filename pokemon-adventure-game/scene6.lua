@@ -69,7 +69,7 @@ local function circleCollision (event)
          time = 500,
          isModal = true,
          params = {
-            nextScene = "scene8",
+            nextScene = "scene7",
             currScene = "scene1",
             pokemon = "charmander"
          }
@@ -226,7 +226,8 @@ end
 function scene:show( event )	
    local sceneGroup = self.view
    local phase = event.phase
-	
+	playerChar.sprite.x=display.contentCenterX
+	playerChar.sprite.y=display.contentCenterY
 	if ( phase == "will" ) then
 		--------------------------------
 		-- Camera Tracking
