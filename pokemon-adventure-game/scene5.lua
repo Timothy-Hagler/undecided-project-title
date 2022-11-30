@@ -2,96 +2,134 @@
 local composer = require( "composer" )
 local perspective = require( "lib.perspective.perspective" )
 local scene = composer.newScene()
-local player = require("player")
+local player = require( "player" )
+local obstacle = require( "obstacle" )
 local musicTrack
+
+physics.start()
+physics.setGravity(0,0)
+physics.setDrawMode("hybrid")
+local camera, world
+if playerChar == nil then
+   playerChar = player:new({x=display.contentCenterX, y=display.contentCenterY, inWater=false})
+else
+   playerChar.inWater = false
+end
+playerChar:spawn()
  
-local camera, world, playerChar
+local camera, world
 local player_velocity_scale = 150
-worldTable = {}
+local worldTable = {}
+
+local function updateSavedGame()
+   local path = system.pathForFile("save.csv", system.DocumentsDirectory)
+   print(path)
+   local updatedFile = io.open(path, "w+")
+   updatedFile:write('scene' .. ',' .. 'health' .. ',' .. 'lives')
+   updatedFile:write('\n')
+   updatedFile:write('scene5' .. ',' .. '100' .. ',' .. '3')
+   io.close(updatedFile)
+end
+
 -- "scene:create()"
 function scene:create( event )
  
    local sceneGroup = self.view
 	world = display.newGroup()
 
-   physics.start()
-   physics.setGravity(0,0)
-   physics.setDrawMode("hybrid")
 
+   local function goToNextScene()
 
-   local background = display.newImage('route.png')
+      local options = {
+         effect = "fade",
+         time = 500
+      }
+      composer.gotoScene("scene6", options)
+   end
+
+   local background = display.newImage('images/route.png')
    background.x = display.contentCenterX
    background.y = display.contentCenterY
 	world:insert(background)
 
 
-	local Options = {
-      frames = {
-      {x = 0, y = 0, 
-      width = 320, height = 480}
+	local Options = { frames = { {x = 0, y = 0, width = 320, height = 480} } }
+   local sheet = graphics.newImageSheet("images/map1_left_terrain.png", Options) 
+   local outline = graphics.newOutline(2, sheet, 1);
+	local lTerrain = obstacle:new({ img=sheet, imgIdx=1, outline=outline, bodyType="static",
+		x=display.contentCenterX, y=display.contentCenterY })
+	lTerrain:spawn()
+	lTerrain.bounce = 0
+	world:insert(lTerrain.sprite)
 
-      }
-   }
+   sheet = graphics.newImageSheet("images/map1_right_terrain.png", Options) 
+   outline = graphics.newOutline(2, sheet, 1);
+	local rTerrain = obstacle:new({ img=sheet, imgIdx=1, outline=outline, bodyType="static",
+		x=display.contentCenterX, y=display.contentCenterY })
+	rTerrain:spawn()
+	world:insert(rTerrain.sprite)
 
-   local obsSheet = graphics.newImageSheet("RouteObstacles.png", Options) 
+	sheet = graphics.newImageSheet("images/map1_top_terrain.png", Options) 
+   outline = graphics.newOutline(2, sheet, 1);
+	local topTerrain = obstacle:new({ img=sheet, imgIdx=1, outline=outline, bodyType="static",
+		x=display.contentCenterX, y=display.contentCenterY })
+		topTerrain:spawn()
+	world:insert(topTerrain.sprite)
 
-   obstacles = display.newImage(obsSheet, 1);
-   obstaclesOutline = graphics.newOutline(2, obsSheet, 1);
+	sheet = graphics.newImageSheet("images/map1_midtrees_terrain.png", Options) 
+   outline = graphics.newOutline(2, sheet, 1);
+	local midTrees = obstacle:new({ img=sheet, imgIdx=1, outline=outline, bodyType="static",
+		x=display.contentCenterX, y=display.contentCenterY })
+		midTrees:spawn()
+	world:insert(midTrees.sprite)
 
-   obstacles.x = display.contentCenterX
-   obstacles.y = display.contentCenterY
+	sheet = graphics.newImageSheet("images/map1_steepledge.png", Options) 
+   outline = graphics.newOutline(2, sheet, 1);
+	local steepLedge = obstacle:new({ img=sheet, imgIdx=1, outline=outline, bodyType="static",
+		x=display.contentCenterX, y=display.contentCenterY })
+		steepLedge:spawn()
+	world:insert(steepLedge.sprite)
 
-   physics.addBody(obstacles, "static", {outline = obstaclesOutline, density=500})
-	world:insert(obstacles)
+	sheet  = graphics.newImageSheet("images/map1_ledge_s.png", Options) 
+	local ledge_s = obstacle:new({ img=sheet, imgIdx=1, outline=graphics.newOutline(2, sheet, 1),
+		bodyType="static", collisionType="below", x=display.contentCenterX, y=display.contentCenterY })
+	ledge_s:spawn()
+	world:insert(ledge_s.sprite)
 
-   playerChar = player:new({x=display.contentCenterX, y=display.contentCenterY})--display.newCircle( display.contentCenterX, display.contentCenterY, 25 )
-   playerChar:spawn()
-   sceneGroup:insert(playerChar.shape)
+	sheet  = graphics.newImageSheet("images/map1_ledge_m.png", Options) 
+	local ledge_m = obstacle:new({ img=sheet, imgIdx=1, outline=graphics.newOutline(2, sheet, 1),
+		bodyType="static", collisionType="below", x=display.contentCenterX, y=display.contentCenterY })
+	ledge_m:spawn()
+	world:insert(ledge_m.sprite)
 
+	sheet  = graphics.newImageSheet("images/map1_ledge_lg.png", Options) 
+	local ledge_lg = obstacle:new({ img=sheet, imgIdx=1, outline=graphics.newOutline(2, sheet, 1),
+		bodyType="static", collisionType="below", x=display.contentCenterX, y=display.contentCenterY })
+		ledge_lg:spawn()
+	world:insert(ledge_lg.sprite)
 
-   local int1Sheet = graphics.newImageSheet("RouteInteractables1.png", Options) 
+	sheet = graphics.newImageSheet("images/map1_fence_terrain.png", Options) 
+   outline = graphics.newOutline(2, sheet, 1);
+	local fence = obstacle:new({ img=sheet, imgIdx=1, outline=graphics.newOutline(2, sheet, 1), bodyType="static",
+		x=display.contentCenterX, y=display.contentCenterY })
+	fence:spawn()
+	world:insert(fence.sprite)
 
-   interactables1 = display.newImage(int1Sheet, 1);
-   interactables1Outline = graphics.newOutline(2, int1Sheet, 1);
+   sceneGroup:insert(playerChar.sprite)
 
-   interactables1.x = display.contentCenterX
-   interactables1.y = display.contentCenterY
-
-   physics.addBody(interactables1, "static", {outline = interactables1Outline, density=500});
-	world:insert(interactables1)
-
-
-   local int2Sheet = graphics.newImageSheet("RouteInteractables2.png", Options) 
-
-   interactables2 = display.newImage(int2Sheet, 1);
-   interactables2Outline = graphics.newOutline(2, int2Sheet, 1);
-
-   interactables2.x = display.contentCenterX
-   interactables2.y = display.contentCenterY
-
-   physics.addBody(interactables2, "static", {outline = interactables2Outline, density=500});
-	world:insert(interactables2)
-
-   local boulderOptions = {
+   Options = {
       frames = {
       {x = 0, y = 0, 
       width = 27, height = 28}
       }
    }
+	
+	sheet = graphics.newImageSheet("images/boulder.png", Options) 
+	local boulder = obstacle:new({ img=sheet, imgIdx=1, outline=graphics.newOutline(2, sheet, 1),
+		x=220, y=322 })
+		boulder:spawn()
+	world:insert(boulder.sprite)
 
-
-	local boulderSheet = graphics.newImageSheet("boulder.png", boulderOptions) 
-
-   boulder = display.newImage(boulderSheet, 1);
-   boulderOutline = graphics.newOutline(2, boulderSheet, 1);
-
-   boulder.x = 200
-   boulder.y = 322
-
-   physics.addBody(boulder, "dynamic", {outline = boulderOutline});
-	boulder.linearDamping = 5
-	boulder.angularDamping = 5
-	world:insert(boulder)
 
    local boulderGoalOptions = {
       frames = {
@@ -100,7 +138,7 @@ function scene:create( event )
       }
    }
 
-	local boulderGoalSheet = graphics.newImageSheet("boulderGoal.png", boulderGoalOptions) 
+	local boulderGoalSheet = graphics.newImageSheet("images/boulderGoal.png", boulderGoalOptions) 
 
    boulderGoal = display.newImage(boulderGoalSheet, 1);
    boulderGoalOutline = graphics.newOutline(2, boulderGoalSheet, 1);
@@ -244,7 +282,7 @@ function scene:create( event )
 
 	sceneGroup:insert(world)
 
-   musicTrack = audio.loadStream( "route1Music.mp3")
+   musicTrack = audio.loadStream( "audio/route1Music.mp3")
 
 
 	-- Move the world wrt. the player to simulate player movement
@@ -254,10 +292,9 @@ function scene:create( event )
 			local xvel, yvel
 			xvel = (event.x - display.contentCenterX)/(display.contentWidth/2) * player_velocity_scale
 			yvel = (event.y - display.contentCenterY)/(display.contentHeight/2) * player_velocity_scale
-         playerChar:move(xvel, yvel)
+         playerChar:move(xvel, yvel, event.phase)
 
 		elseif ( event.phase == "ended" ) then
-			playerChar.shape:setLinearVelocity(0, 0)
          playerChar:StopMoving()
 		end
 	end
@@ -273,20 +310,10 @@ function scene:create( event )
       end
    end
 
-	local function onPlayerCollision( self, event )
-      transition.cancel( event.target )
-
-		print( "player collision with " .. event.target.tag )	-- #TODO: Assign this for puzzle goals and one-way terrain
-      if ( event.phase == "began" ) then
-         print("hit")
-      elseif ( event.phase == "ended" ) then
-         print("no longer hit")
-      end
-   end
-
    Runtime:addEventListener("touch", movePlayer)
-	playerChar.shape.collision = onPlayerCollision
-   playerChar.shape:addEventListener("collision")
+   updateSavedGame()
+	-- playerChar.sprite.collision = onPlayerCollision		-- local collison
+   -- playerChar.sprite:addEventListener("collision")		-- local collision
    --Runtime:addEventListener("collision", onGlobalCollision)	-- global collision
 end
 
@@ -299,21 +326,23 @@ function scene:show( event )
 		--------------------------------
 		-- Camera Tracking
 		--------------------------------
-		camera = perspective.createView(2)	-- #DEBUG1
-		camera:add(playerChar.shape, 1) -- Add player to layer 1 of the camera	-- #DEBUG1
-		camera:appendLayer()	-- add layer 0 in front of the camera	-- #DEBUG1
+		camera = perspective.createView(2)
+		camera:add(playerChar.sprite, 1) -- Add player to layer 1 of the camera
+		camera:appendLayer()	-- add layer 0 in front of the camera
 		
-		camera:add(world, 2)	-- #DEBUG1
-		camera:setParallax(0, 1) -- set parallax for each layer in descending order	-- #DEBUG1
+		camera:add(world, 2)
+		camera:setParallax(0, 1) -- set parallax for each layer in descending order
 		
 		camera.damping = 10 -- A bit more fluid tracking
-		camera:setFocus(playerChar.shape) -- Set the focus to the player
+		camera:setFocus(playerChar.sprite) -- Set the focus to the player
 		print("Layers: "..camera:layerCount())
    elseif ( phase == "did" ) then
       -- Called when the scene is now on screen.
       -- Insert code here to make the scene come alive.
       -- Example: start timers, begin animation, play audio, etc.
 		camera:track() -- Begin auto-tracking
+      
+
       audio.play( musicTrack, { channel=1, loops=-1 } )
    end
 end
@@ -326,10 +355,12 @@ function scene:hide( event )
  
    if ( phase == "will" ) then
 		audio.stop( 1 )
+      updateSavedGame()
 
    elseif ( phase == "did" ) then
       -- Called immediately after scene goes off screen.
 		camera:destroy()
+      composer.removeScene("scene5", false)
    end
 end
 
