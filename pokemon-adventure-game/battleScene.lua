@@ -34,6 +34,8 @@ function scene:goToNextScene()
 	}
 	if (params.nextScene == "scene8") then
 		os.exit()
+	elseif (params.lastToWin and (params.lastToWin == true) ) then
+		composer.gotoScene("winScreen", nextOptions)
 	else
 		composer.gotoScene(params.nextScene, nextOptions)
 	end
@@ -278,9 +280,14 @@ function scene:create(event)
 			-- composer.hideOverlay("fade")
 			-- and restart the scene
 		end
-		if (enemyHealthBar:getProgress() <= 0) then -- if player dies, decrement lives
+		if (enemyHealthBar:getProgress() <= 0) then -- if enemy dies, move on
 			composer.hideOverlay("fade", 400)
-			scene:goToNextScene() -- uses parent function in scene 5
+
+			if (params.lastToWin ==true ) then 
+				scene:goToNextScene() -- uses parent function in scene 5
+			else
+				scene:goToNextScene() -- uses parent function in scene 5
+			end
 			-- composer.hideOverlay("fade")
 			-- go to the scene7
 		end

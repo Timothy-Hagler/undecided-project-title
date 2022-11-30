@@ -73,8 +73,4 @@ function genericTrigger( self, event )
 	print("Placeholder!")
 end
 
-function moveToScene( sceneName )
-
-end
-
 return Obstacle

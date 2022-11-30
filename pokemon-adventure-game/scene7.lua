@@ -9,7 +9,6 @@ local camera, world
 local playerChar
 local player_velocity_scale = 150
 local numOfLives = 3
-worldTable = {}
 
 
 physics.start()
@@ -333,10 +332,11 @@ function scene:create(event)
 				time = 500,
 				isModal = true,
 				params = {
-					nextScene = "scene8",
+					nextScene = "scene2",
 					currScene = "scene1",
 					pokemon = "bulbasaur",
 					numOfLives = numOfLives,
+					lastToWin = true
 				}
 			}
 			playerChar.movementEnabled = false

@@ -6,9 +6,9 @@ local scene = composer.newScene()
 -- All code outside of the listener functions will only be executed ONCE
 -- unless "composer.removeScene()" is called.
 ---------------------------------------------------------------------------------
- 
+
 -- local forward references should go here
- 
+
 ---------------------------------------------------------------------------------
  
 -- "scene:create()"
@@ -16,12 +16,38 @@ local scene = composer.newScene()
 local camera, world, playerChar
 local player_velocity_scale = 150
 
+-- Move the world wrt. the player to simulate player movement
+local function movePlayer( event )
+	print(event.phase)
+	if ( event.phase == "moved" or event.phase == "began") then
+		local xvel, yvel
+		xvel = (event.x - display.contentCenterX)/(display.contentWidth/2) * player_velocity_scale
+		yvel = (event.y - display.contentCenterY)/(display.contentHeight/2) * player_velocity_scale
+		playerChar:move(xvel, yvel)
+		
+	elseif ( event.phase == "ended" ) then
+		playerChar:StopMoving()
+	end
+end
+
+
+local function onGlobalCollision( event )
+	transition.cancel( event.target )
+	print( "handler" )
+	if ( event.phase == "began" ) then
+		print("hit")
+		playerChar.prevXForce = 0
+	elseif ( event.phase == "ended" ) then
+		print("no longer hit")
+	end
+end
+
 function scene:create( event )
 
    -- Initialize the scene
-
+	
    local sceneGroup = self.view
-
+	
 	world = display.newGroup()
    physics.start( true )
    physics.setGravity(0,0)
@@ -30,8 +56,8 @@ function scene:create( event )
 	
 	world = display.newGroup()
 	sceneGroup:insert( world )
-
-   background = display.newImage( "example_background.png", display.contentCenterX, display.contentCenterY )
+	
+   local background = display.newImage( "example_background.png", display.contentCenterX, display.contentCenterY )
    background.xScale = 0.4
    background.yScale = 0.4
 	
@@ -47,32 +73,8 @@ function scene:create( event )
 	enemy.angularDamping = 5
    world:insert( enemy )
 
-   local function onGlobalCollision( event )
-      transition.cancel( event.target )
-		print( "handler" )
-      if ( event.phase == "began" ) then
-         print("hit")
-         playerChar.prevXForce = 0
-      elseif ( event.phase == "ended" ) then
-         print("no longer hit")
-      end
-   end
-	
 	enemy:addEventListener("collision", onGlobalCollision)
 	
-   -- Move the world wrt. the player to simulate player movement
-	local function movePlayer( event )
-		print(event.phase)
-		if ( event.phase == "moved" or event.phase == "began") then
-			local xvel, yvel
-			xvel = (event.x - display.contentCenterX)/(display.contentWidth/2) * player_velocity_scale
-			yvel = (event.y - display.contentCenterY)/(display.contentHeight/2) * player_velocity_scale
-         playerChar:move(xvel, yvel)
-
-		elseif ( event.phase == "ended" ) then
-         playerChar:StopMoving()
-		end
-	end
 	
    playerChar.x = display.contentCenterX
 	playerChar.y = display.contentCenterY

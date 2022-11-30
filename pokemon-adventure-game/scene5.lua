@@ -23,6 +23,8 @@ else
 end
 playerChar:spawn()
 
+local boulder, checkBoulder
+
 local camera, world
 local player_velocity_scale = 150
 local worldTable = {}
@@ -73,15 +75,6 @@ local function resumeAudio()
 	audio.resume(1)
 end
 
--- local function nextGame()
--- 	audio.stop(1)
--- 	local options = {
--- 		effect = "fade",
--- 		time = 500
--- 	}
--- 	timer.cancelAll()
--- 	composer.gotoScene("scene6", options)
--- end
 
 -- "scene:create()"
 function scene:create(event)
@@ -96,8 +89,8 @@ function scene:create(event)
 	background.x = display.contentCenterX
 	background.y = display.contentCenterY
 	world:insert(background)
-
-
+	
+	
 	local Options = { frames = { { x = 0, y = 0, width = 320, height = 480 } } }
 	local sheet = graphics.newImageSheet("images/map1_left_terrain.png", Options)
 	local outline = graphics.newOutline(2, sheet, 1);
@@ -116,139 +109,101 @@ function scene:create(event)
 	sheet = graphics.newImageSheet("images/map1_top_terrain.png", Options)
 	outline = graphics.newOutline(2, sheet, 1);
 	local topTerrain = obstacle:new({ img = sheet, imgIdx = 1, outline = outline, bodyType = "static",
-		x = display.contentCenterX, y = display.contentCenterY })
+	x = display.contentCenterX, y = display.contentCenterY })
 	topTerrain:spawn()
 	world:insert(topTerrain.sprite)
 
 	sheet = graphics.newImageSheet("images/map1_midtrees_terrain.png", Options)
 	outline = graphics.newOutline(2, sheet, 1);
 	local midTrees = obstacle:new({ img = sheet, imgIdx = 1, outline = outline, bodyType = "static",
-		x = display.contentCenterX, y = display.contentCenterY })
+	x = display.contentCenterX, y = display.contentCenterY })
 	midTrees:spawn()
 	world:insert(midTrees.sprite)
 
 	sheet = graphics.newImageSheet("images/map1_steepledge.png", Options)
 	outline = graphics.newOutline(2, sheet, 1);
 	local steepLedge = obstacle:new({ img = sheet, imgIdx = 1, outline = outline, bodyType = "static",
-		x = display.contentCenterX, y = display.contentCenterY })
+	x = display.contentCenterX, y = display.contentCenterY })
 	steepLedge:spawn()
 	world:insert(steepLedge.sprite)
 
 	sheet = graphics.newImageSheet("images/map1_ledge_s.png", Options)
 	local ledge_s = obstacle:new({ img = sheet, imgIdx = 1, outline = graphics.newOutline(2, sheet, 1),
-		bodyType = "static", collisionType = "below", x = display.contentCenterX, y = display.contentCenterY })
+	bodyType = "static", collisionType = "below", x = display.contentCenterX, y = display.contentCenterY })
 	ledge_s:spawn()
 	world:insert(ledge_s.sprite)
 
 	sheet = graphics.newImageSheet("images/map1_ledge_m.png", Options)
 	local ledge_m = obstacle:new({ img = sheet, imgIdx = 1, outline = graphics.newOutline(2, sheet, 1),
-		bodyType = "static", collisionType = "below", x = display.contentCenterX, y = display.contentCenterY })
+	bodyType = "static", collisionType = "below", x = display.contentCenterX, y = display.contentCenterY })
 	ledge_m:spawn()
 	world:insert(ledge_m.sprite)
 
 	sheet = graphics.newImageSheet("images/map1_ledge_lg.png", Options)
 	local ledge_lg = obstacle:new({ img = sheet, imgIdx = 1, outline = graphics.newOutline(2, sheet, 1),
 		bodyType = "static", collisionType = "below", x = display.contentCenterX, y = display.contentCenterY })
-	ledge_lg:spawn()
-	world:insert(ledge_lg.sprite)
+		ledge_lg:spawn()
+		world:insert(ledge_lg.sprite)
 
 	sheet = graphics.newImageSheet("images/map1_fence_terrain.png", Options)
 	outline = graphics.newOutline(2, sheet, 1);
 	local fence = obstacle:new({ img = sheet, imgIdx = 1, outline = graphics.newOutline(2, sheet, 1), bodyType = "static",
-		x = display.contentCenterX, y = display.contentCenterY })
+	x = display.contentCenterX, y = display.contentCenterY })
 	fence:spawn()
 	world:insert(fence.sprite)
-
+	
 	Options = {
 		frames = {
 			{ x = 0, y = 0,
-				width = 27, height = 28 }
+			width = 27, height = 28 }
 		}
 	}
-
+	
 	sheet = graphics.newImageSheet("images/boulder.png", Options)
-	local boulder = obstacle:new({ img = sheet, imgIdx = 1, outline = graphics.newOutline(2, sheet, 1),
-		x = 220, y = 322 })
+	 boulder = obstacle:new({ img = sheet, imgIdx = 1, outline = graphics.newOutline(2, sheet, 1),
+	x = 220, y = 322 })
 	boulder:spawn()
 	world:insert(boulder.sprite)
-
+	
 
 	local boulderGoalOptions = {
 		frames = {
 			{ x = 0, y = 0,
-				width = 28, height = 24 }
+			width = 28, height = 24 }
 		}
 	}
 
 	local boulderGoalSheet = graphics.newImageSheet("images/boulderGoal.png", boulderGoalOptions)
-
-	boulderGoal = display.newImage(boulderGoalSheet, 1);
-	boulderGoalOutline = graphics.newOutline(2, boulderGoalSheet, 1);
-
+	
+	local boulderGoal = display.newImage(boulderGoalSheet, 1);
+	local boulderGoalOutline = graphics.newOutline(2, boulderGoalSheet, 1);
+	
 	boulderGoal.x = 105
 	boulderGoal.y = 322
-
+	
 	physics.addBody(boulderGoal, "dynamic", { outline = boulderGoalOutline });
-
-
-	-- -- bulbasaur (friend)
-	-- local bulbOpt =
-	-- {
-	-- 	frames =
-	-- 	{
-	-- 		{ x = 39, y = 119, width = 70, height = 66 }, -- 1. full bulb
-	-- 		{ x = 183, y = 91, width = 40, height = 34 }, -- 2. mini bulb sprite
-	-- 		{ x = 365, y = 197, width = 51, height = 36 }, -- 3. bulb back (color from background might be included oops
-	-- 		{ x = 12, y = 271, width = 30, height = 32 }, -- 4. bulb forward walk 1
-	-- 		{ x = 76, y = 273, width = 30, height = 32 }, -- 5. bulb forward walk 2
-	-- 		{ x = 140, y = 271, width = 30, height = 32 }, -- 6. bulb forward walk 3
-	-- 		{ x = 204, y = 273, width = 30, height = 32 }, -- 7. bulb forward walk 4
-	-- 		{ x = 8, y = 335, width = 38, height = 30 }, -- 8. bulb side run 1
-	-- 		{ x = 72, y = 337, width = 38, height = 30 }, -- 9. bulb side run 2
-	-- 		{ x = 136, y = 335, width = 38, height = 30 }, -- 10. bulb side run 3
-	-- 		{ x = 10, y = 399, width = 38, height = 30 }, -- 12. bulb right 1
-	-- 		{ x = 74, y = 401, width = 38, height = 30 }, -- 13. bulb right 2
-	-- 		{ x = 138, y = 399, width = 38, height = 30 }, -- 14. bulb right 3
-	-- 		{ x = 202, y = 401, width = 38, height = 30 }, -- 15. bulb right 4
-	-- 	}
-	-- }
-
-	-- local bulbSheet = graphics.newImageSheet("spritesheets/bulbasaur.png", bulbOpt)
-
-	-- -- create the sequence table
-	-- local bulbSequenceData =
-	-- {
-	-- 	{ name = "attack", frames = { 4, 5, 6, 7 }, time = 200, loopCount = 0 }
-	-- }
-
-	-- local bulbSprite = display.newSprite(bulbSheet, bulbSequenceData)
-	-- bulbSprite.x = display.contentCenterX
-	-- bulbSprite.y = display.contentCenterY
-
-
+	
 	local circle1 = display.newCircle(display.contentCenterX + 50, display.contentCenterY - 50, 30)
 	circle1:setFillColor(1, 0, 0)
-	--local circle1 = display.newCircle(display.contentCenterX,display.contentCenterY,100)
 	circle1.alpha = 0
 	-- hide the circle
 	physics.addBody(circle1, "static", { radius = 30 })
 	circle1.isSensor = true
 	world:insert(circle1)
-
+	
 	-- add collision event
 	local function circleCollision(event)
 		if (event.phase == "began") then
-			print("CIRCLE1")
-			print(event.other)
-			print(playerChar)
-
+			-- print("CIRCLE1")		-- #DEBUG
+			-- print(event.other)
+			-- print(playerChar)
 
 			local overlayOptions = { -- options for scene overlay
-				effect = "fade",
-				time = 500,
-				isModal = true,
-				params = {
-					nextScene = "scene6",
+			effect = "fade",
+			time = 500,
+			isModal = true,
+			params = {
+				nextScene = "scene6",
 					currScene = "scene1",
 					pokemon = "squirtle",
 					numOfLives = numOfLives,
@@ -256,6 +211,8 @@ function scene:create(event)
 			}
 			circle1:removeEventListener("collision", circleCollision)
 			camera:destroy()
+			playerChar.movementEnabled = false
+			timer.cancelAll()
 			composer.showOverlay("battleScene", overlayOptions)
 		end
 	end
@@ -263,8 +220,8 @@ function scene:create(event)
 	circle1:addEventListener("collision", circleCollision)
 	-- call the battle scene overlay here if the radius is encountered at a certain x and y positions
 
-
-
+	
+	
 	-- squirtle (enemy)
 	local squirtleOpt =
 	{
@@ -286,10 +243,10 @@ function scene:create(event)
 			{ x = 203, y = 397, width = 30, height = 30 }, -- 14. squirtle right 4
 		}
 	}
-
-
+	
+	
 	local squirtleSheet = graphics.newImageSheet("spritesheets/squirtle.png", squirtleOpt)
-
+	
 	-- create the sequence table
 	local squirtleSequenceData =
 	{
@@ -299,19 +256,19 @@ function scene:create(event)
 	}
 
 	local squirtleSprite = display.newSprite(squirtleSheet, squirtleSequenceData)
-
+	
 	squirtleSprite.x = display.contentCenterX + 50
 	squirtleSprite.y = display.contentCenterY - 50
-
+	
 	-- add the collider to squirtle
 
-
-
+	
+	
 	world:insert(squirtleSprite)
 
 	sceneGroup:insert(boulderGoal)
 	world:insert(boulderGoal)
-
+	
 	
 	local entrance = display.newRect(display.contentCenterX, 485, 100, 20)
 	entrance:setFillColor(1, 1, 1, 0)
@@ -326,11 +283,28 @@ function scene:create(event)
 	world:insert(exitBlock)
 	
 	exitBlock:addEventListener("collision", scene.goToNextScene)
+
+
+	local boulderExists = true
+	checkBoulder =  function()
+		--print(boulder.sprite.x)
+		--print(boulder.sprite.y)
+		if boulderExists and boulder.sprite.x < 105 and boulder.sprite.y < 325 then
+			physics.removeBody(boulder.sprite)
+			physics.addBody(boulder.sprite, "static", {outline=boulder.outline, bounciness=0})
+			boulder.sprite.x = 105
+			boulder.sprite.y = 325
+			audio.pause(1)
+			audio.play(success)
+			timer.performWithDelay(2750, resumeAudio, 1)
+			boulderExists = false
+		end
+	end
 	
 	sceneGroup:insert(world)
 	
 	musicTrack = audio.loadStream("audio/route1Music.mp3")
-
+	
 	-- playerChar.sprite.collision = onPlayerCollision		-- local collison
 	-- playerChar.sprite:addEventListener("collision")		-- local collision
 	--Runtime:addEventListener("collision", onGlobalCollision)	-- global collision
@@ -356,6 +330,9 @@ function scene:show(event)
 	local sceneGroup = self.view
 	local phase = event.phase
 
+	timer.performWithDelay(1000,checkBoulder,-1)
+	-- timer.performWithDelay(500,playerLeft,-1) 
+
 	if (phase == "will") then
 		setupCamera(playerChar, world)
 		Runtime:addEventListener("touch", movePlayer)
@@ -380,6 +357,7 @@ function scene:hide(event)
 		audio.stop(1)
 		playerChar.movementEnabled = false
 		Runtime:removeEventListener("touch", movePlayer)
+		timer.cancelAll()
 		updateSavedGame()
 
 	elseif (phase == "did") then
