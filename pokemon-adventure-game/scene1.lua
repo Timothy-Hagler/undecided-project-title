@@ -61,7 +61,7 @@ local function showGame()
       time = 500
    }
    local save = getSavedGame()
-   composer.gotoScene("scene7", options)
+   composer.gotoScene(save.scene, options)
 
 end
 
