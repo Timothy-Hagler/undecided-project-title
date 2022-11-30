@@ -4,6 +4,7 @@ local perspective = require( "lib.perspective.perspective" )
 local scene = composer.newScene()
 local player = require( "player" )
 local obstacle = require( "obstacle" )
+local widget = require("widget")
 local musicTrack
 
 physics.start()
@@ -37,30 +38,17 @@ function scene:create( event )
    local sceneGroup = self.view
 	world = display.newGroup()
 
-
-   function scene:goToNextScene()
-
-      local options = {
-         effect = "fade",
-         time = 500
-      }
-      composer.gotoScene("scene6", options)
-   end
-
-   function scene:goToPreviousScene()
-
-      local options = {
-         effect = "fade",
-         time = 500
-      }
-      composer.gotoScene("scene5", options)
-   end
-
    local background = display.newImage('images/route.png')
    background.x = display.contentCenterX
    background.y = display.contentCenterY
 	world:insert(background)
 
+
+   local circle1 = display.newCircle(display.contentCenterX,display.contentCenterY,100)
+
+   circle1:setFillColor(1,0,0)
+   physics.addBody(circle1, "static", {radius = 50})
+   circle1.isSensor = true
 
 	local Options = { frames = { {x = 0, y = 0, width = 320, height = 480} } }
    local sheet = graphics.newImageSheet("images/map1_left_terrain.png", Options) 
@@ -228,9 +216,59 @@ function scene:create( event )
    }
 
    local squirtleSprite = display.newSprite(squirtleSheet, squirtleSequenceData)
+   world:insert(circle1)
+
+local function circleCollision (event)
+   if(event.phase == "began") then
+      print("CIRCLE1")
+      print(event.other)
+      print(playerChar)
+
+
+      local overlayOptions = { -- options for scene overlay
+         effect = "fade",
+         time = 500,
+         isModal = true,
+         params = {
+            nextScene = "scene6",
+            currScene = "scene6"
+         }
+      }
+
+      -- draw battle button
+      local function handleButtonEvent( buttonEvent )
+         if("ended" == buttonEvent.phase) then
+            -- call the battleScene.lua overlay
+            print("battleSceneOverlay")
+            composer.showOverlay("battleScene", overlayOptions)
+         end
+      end
 
 
 
+      local battleButton = widget.newButton(
+         {
+            left = display.contentCenterX - 100,
+            top = display.contentCenterY + 200,
+            id = "battleButton",
+            shape = "roundedRect",
+            label = "BATTLE",
+            onEvent = handleButtonEvent
+         }
+      )
+
+
+      --add event Listener
+
+      -- if clicked call the battleScene overlay
+
+         --if(event.other == playerChar) then
+          --  print("ASH")
+     -- end
+   end
+end
+
+circle1:addEventListener("collision", circleCollision)
    
    sceneGroup:insert(boulderGoal)
 	world:insert(boulderGoal)
@@ -298,7 +336,7 @@ function scene:show( event )
 		camera:track() -- Begin auto-tracking
       
 
-      audio.play( musicTrack, { channel=1, loops=-1 } )
+      --audio.play( musicTrack, { channel=1, loops=-1 } )
    end
 end
 
