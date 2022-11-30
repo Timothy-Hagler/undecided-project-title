@@ -43,7 +43,11 @@ function scene:create( event )
          effect = "fade",
          time = 500
       }
-      composer.gotoScene(params.nextScene, nextOptions)
+      if (params.nextScene == "scene8") then
+         os.exit()
+      else
+         composer.gotoScene(params.nextScene, nextOptions)
+      end
    end
 
    function goToPreviousScene()

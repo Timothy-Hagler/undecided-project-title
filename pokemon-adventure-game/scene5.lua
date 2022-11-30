@@ -11,7 +11,7 @@ physics.start()
 physics.setGravity(0,0)
 local camera, world
 if playerChar == nil then
-   playerChar = player:new({x=display.contentCenterX, y=display.contentCenterY, inWater=false})
+   playerChar = player:new({x=display.contentCenterX, y=450, inWater=false})
 else
    playerChar.inWater = false
 end
@@ -68,7 +68,6 @@ function scene:create( event )
 	local lTerrain = obstacle:new({ img=sheet, imgIdx=1, outline=outline, bodyType="static",
 		x=display.contentCenterX, y=display.contentCenterY })
 	lTerrain:spawn()
-	lTerrain.bounce = 0
 	world:insert(lTerrain.sprite)
 
    sheet = graphics.newImageSheet("images/map1_right_terrain.png", Options) 
@@ -310,6 +309,18 @@ function scene:create( event )
 	world:insert(boulderGoal)
 
 	sceneGroup:insert(world)
+	
+	local entrance = display.newRect(display.contentCenterX, 485, 100, 20)
+	entrance:setFillColor(1,1,1,0)
+	physics.addBody(entrance, "static")
+	sceneGroup:insert(entrance)
+	world:insert(entrance)
+
+	local exitBlock = display.newRect(50, 10, 100, 10)
+	entrance:setFillColor(1,1,1,0)
+	physics.addBody(exitBlock, "static")
+	sceneGroup:insert(exitBlock)
+	world:insert(exitBlock)
 
    musicTrack = audio.loadStream( "audio/route1Music.mp3")
 
@@ -339,8 +350,51 @@ function scene:create( event )
       end
    end
 
+local success = audio.loadSound("audio/success.mp3")
+   local function resumeAudio()
+   	audio.resume(1)
+   end
+
+   local boulderExists = true
+   local function checkBoulder()
+   	--print(boulder.sprite.x)
+   	--print(boulder.sprite.y)
+   	if boulderExists and boulder.sprite.x < 105 and boulder.sprite.y < 325 then
+   		physics.removeBody(boulder.sprite)
+   		physics.addBody(boulder.sprite, "static", {outline=boulder.outline, bounciness=0})
+   		boulder.sprite.x = 105
+   		boulder.sprite.y = 325
+   		audio.pause(1)
+   		audio.play(success)
+   		timer.performWithDelay(2750, resumeAudio, 1)
+   		boulderExists = false
+   	end
+   end
+
+   local function nextGame()
+   	audio.stop( 1 )
+   	local options = {
+      	effect = "fade",
+      	time = 500
+   	}
+   	composer.gotoScene("scene6", options)
+	end
+
+   local function playerLeft()
+   	--print(playerChar.sprite.x, ": x")
+   	--print(playerChar.sprite.y, ": y")
+   	if playerChar.sprite.y < 38 and playerChar.sprite.x > 25 and playerChar.sprite.x < 75 then
+   		nextGame()
+   	end
+   end	
+
    Runtime:addEventListener("touch", movePlayer)
    updateSavedGame()
+	-- playerChar.sprite.collision = onPlayerCollision		-- local collison
+   -- playerChar.sprite:addEventListener("collision")		-- local collision
+   --Runtime:addEventListener("collision", onGlobalCollision)	-- global collision
+	timer.performWithDelay(1000,checkBoulder,-1)
+   timer.performWithDelay(500,playerLeft,-1)
 	-- playerChar.sprite.collision = onPlayerCollision		-- local collison
    -- playerChar.sprite:addEventListener("collision")		-- local collision
    --Runtime:addEventListener("collision", onGlobalCollision)	-- global collision
