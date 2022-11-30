@@ -9,8 +9,8 @@ local musicTrack
 
 physics.start()
 physics.setGravity(0,0)
-physics.setDrawMode("hybrid")
 local camera, world
+local battleButton
 if playerChar == nil then
    playerChar = player:new({x=display.contentCenterX, y=display.contentCenterY, inWater=false})
 else
@@ -105,7 +105,7 @@ function scene:create( event )
 		ledge_lg:spawn()
 	world:insert(ledge_lg.sprite)
 
-	sheet = graphics.newImageSheet("images/map1_fence_terrain.png", Options) 
+	sheet = graphics.newImageSheet("images/map1_fence_terrain.png", Options)
    outline = graphics.newOutline(2, sheet, 1);
 	local fence = obstacle:new({ img=sheet, imgIdx=1, outline=graphics.newOutline(2, sheet, 1), bodyType="static",
 		x=display.contentCenterX, y=display.contentCenterY })
@@ -220,18 +220,13 @@ function scene:create( event )
 
 local function circleCollision (event)
    if(event.phase == "began") then
-      print("CIRCLE1")
-      print(event.other)
-      print(playerChar)
-
-
       local overlayOptions = { -- options for scene overlay
          effect = "fade",
          time = 500,
          isModal = true,
          params = {
             nextScene = "scene6",
-            currScene = "scene6"
+            currScene = "scene1"
          }
       }
 
@@ -239,14 +234,11 @@ local function circleCollision (event)
       local function handleButtonEvent( buttonEvent )
          if("ended" == buttonEvent.phase) then
             -- call the battleScene.lua overlay
-            print("battleSceneOverlay")
             composer.showOverlay("battleScene", overlayOptions)
          end
       end
 
-
-
-      local battleButton = widget.newButton(
+      battleButton = widget.newButton(
          {
             left = display.contentCenterX - 100,
             top = display.contentCenterY + 200,
@@ -256,19 +248,10 @@ local function circleCollision (event)
             onEvent = handleButtonEvent
          }
       )
-
-
-      --add event Listener
-
-      -- if clicked call the battleScene overlay
-
-         --if(event.other == playerChar) then
-          --  print("ASH")
-     -- end
    end
 end
 
-circle1:addEventListener("collision", circleCollision)
+   circle1:addEventListener("collision", circleCollision)
    
    sceneGroup:insert(boulderGoal)
 	world:insert(boulderGoal)
@@ -305,9 +288,6 @@ circle1:addEventListener("collision", circleCollision)
 
    Runtime:addEventListener("touch", movePlayer)
    updateSavedGame()
-	-- playerChar.sprite.collision = onPlayerCollision		-- local collison
-   -- playerChar.sprite:addEventListener("collision")		-- local collision
-   --Runtime:addEventListener("collision", onGlobalCollision)	-- global collision
 end
 
 
