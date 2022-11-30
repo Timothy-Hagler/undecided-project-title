@@ -2,9 +2,12 @@
 local composer = require( "composer" )
 local csv = require("csv")
 local scene = composer.newScene()
-
 local musicTrack
- 
+
+local debug = true	-- #DEBUG
+local widget 	-- #DEBUG
+if debug then widget = require("widget") end
+
 ---------------------------------------------------------------------------------
 -- All code outside of the listener functions will only be executed ONCE
 -- unless "composer.removeScene()" is called.
@@ -88,6 +91,16 @@ local function showHelp()
 
 end
 
+local selectLevel
+if ( debug ) then
+	selectLevel = function( event, lvNum )
+		audio.stop( 1 )
+	  local levels = { "scene5", "scene6", "scene7" }
+	  lvNum = event.target.segmentNumber - 1
+	  if lvNum == 0 then lvNum = 1 end
+	  composer.gotoScene( levels[lvNum], { effect = "fade", time = 500} )
+	end
+end
 
 
 
@@ -123,6 +136,15 @@ function scene:create( event )
    myText:setFillColor(0.3,0.3,0.3)
    sceneGroup:insert(myText)
    myText:addEventListener("tap", exit)
+
+	if ( debug ) then
+		local segmentedControl = widget.newSegmentedControl({
+			left=100, top=420, segmentWidth=30, segmentHeight=20, segments={ " ", "1", "2", "3" },
+			defaultSegment = 1, onPress=selectLevel
+		});
+		sceneGroup:insert(segmentedControl)
+	end
+
 
    musicTrack = audio.loadStream( "audio/menuMusic.mp3")
 
