@@ -5,10 +5,21 @@ local scene = composer.newScene()
 local player = require( "player" )
 local obstacle = require( "obstacle" )
 local musicTrack
+
+physics.start()
+physics.setGravity(0,0)
+physics.setDrawMode("hybrid")
+local camera, world
+if playerChar == nil then
+   playerChar = player:new({x=display.contentCenterX, y=display.contentCenterY, inWater=false})
+else
+   playerChar.inWater = false
+end
+playerChar:spawn()
  
-local camera, world, playerChar
+local camera, world
 local player_velocity_scale = 150
-worldTable = {}
+local worldTable = {}
 
 local function updateSavedGame()
    local path = system.pathForFile("save.csv", system.DocumentsDirectory)
@@ -26,10 +37,15 @@ function scene:create( event )
    local sceneGroup = self.view
 	world = display.newGroup()
 
-   physics.start()
-   physics.setGravity(0,0)
-   physics.setDrawMode("hybrid")
 
+   local function goToNextScene()
+
+      local options = {
+         effect = "fade",
+         time = 500
+      }
+      composer.gotoScene("scene6", options)
+   end
 
    local background = display.newImage('images/route.png')
    background.x = display.contentCenterX
@@ -99,8 +115,6 @@ function scene:create( event )
 	fence:spawn()
 	world:insert(fence.sprite)
 
-   playerChar = player:new({x=display.contentCenterX, y=display.contentCenterY})--display.newCircle( display.contentCenterX, display.contentCenterY, 25 )
-   playerChar:spawn()
    sceneGroup:insert(playerChar.sprite)
 
    Options = {
@@ -217,6 +231,7 @@ function scene:hide( event )
    elseif ( phase == "did" ) then
       -- Called immediately after scene goes off screen.
 		camera:destroy()
+      composer.removeScene("scene5", false)
    end
 end
 
@@ -224,7 +239,6 @@ end
 function scene:destroy( event )
  
    local sceneGroup = self.view
-   updateSavedGame()
  
    -- Called prior to the removal of scene's view ("sceneGroup").
    -- Insert code here to clean up the scene.
