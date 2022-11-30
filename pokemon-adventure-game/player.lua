@@ -16,6 +16,9 @@ function Player:spawn()
     physics.addBody(self.shape, "dynamic", {bounciness=0, radius=15, linearDamping = 10});
 end
 
+
+
+
 function Player:InitiateBattle()
     -- waiting on pokemon to be in first
 end

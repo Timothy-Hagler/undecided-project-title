@@ -30,16 +30,7 @@ function scene:create( event )
  
    local sceneGroup = self.view
  
-   local background = display.newImage('helpScreen.png')
-   background.x = display.contentCenterX
-   background.y = display.contentCenterY
-   sceneGroup:insert(background)
 
-   local button = display.newImage('back.png')
-   button.x = 270
-   button.y = 45
-   sceneGroup:insert(button)
-   button:addEventListener("tap", backButton)
 
 
 
