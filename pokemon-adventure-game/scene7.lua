@@ -1,15 +1,16 @@
 -- Scene Composer for cave route (level 2)
 local composer = require("composer")
 local perspective = require("lib.perspective.perspective")
-local scene = composer.newScene()
-local player = require("player")
 local obstacle = require("obstacle")
+local player = require("player")
+local scene = composer.newScene()
 local musicTrack
-local camera, world
-local playerChar
-local player_velocity_scale = 150
 local numOfLives = 3
 
+local camera, world
+local cameraDestroyed = nil
+local playerChar
+local player_velocity_scale = 150
 
 physics.start()
 physics.setGravity(0, 0)
@@ -341,7 +342,11 @@ function scene:create(event)
 			}
 			playerChar.movementEnabled = false
 			circle1:removeEventListener("collision", circleCollision)
-			camera:destroy()
+			if not cameraDestroyed then
+				camera:destroy()
+				camera = nil
+				cameraDestroyed = true
+			end
 			composer.showOverlay("battleScene", overlayOptions)
 		end
 	end
@@ -425,20 +430,24 @@ function scene:hide(event)
 
 	if (phase == "will") then
 		audio.stop(1)
+		playerChar.movementEnabled = false
 		Runtime:removeEventListener("touch", movePlayer)
+		audio.stop(1)
+		timer.cancelAll()
 		updateSavedGame()
-
 	elseif (phase == "did") then
 		-- Called immediately after scene goes off screen.
-		--camera:destroy()
 	end
 end
 
 function scene:destroy(event)
 	local sceneGroup = self.view
 
-	camera:destroy()
-	camera = nil
+	if not cameraDestroyed then
+		camera:destroy()
+		camera = nil
+		cameraDestroyed = true
+	end
 	composer.removeScene("scene7", false)
 
 	-- Called prior to the removal of scene's view ("sceneGroup").

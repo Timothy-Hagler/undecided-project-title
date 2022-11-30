@@ -25,14 +25,13 @@ function scene:create( event )
    local winText = display.newText("YOU WIN!", 145, 220, "pokemon_fire_red.ttf", 38)
    winText:setFillColor(0.3,0.3,0.3)
    sceneGroup:insert(winText)
-   winText:addEventListener("tap", backButton)
+   -- winText:addEventListener("tap", backButton)
 
    local button = display.newImage('images/back.png')
    button.x = 270
    button.y = 45
    sceneGroup:insert(button)
    button:addEventListener("tap", backButton)
-
 end
  
 -- "scene:show()"
@@ -48,11 +47,9 @@ function scene:show( event )
       -- Called when the scene is now on screen.
       -- Insert code here to make the scene come alive.
       -- Example: start timers, begin animation, play audio, etc.
-		local options = {
-			effect = "fade",
-			time = 1000
-		}
-		composer.gotoScene("scene2", options)
+		local options = { effect = "fade", time = 1000 }
+		
+		timer.performWithDelay(1000, composer.gotoScene("scene2", options), 1)
    end
 end
  

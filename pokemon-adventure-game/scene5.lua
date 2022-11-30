@@ -1,14 +1,17 @@
 -- Scene Composer for Route 1
 local composer = require("composer")
 local perspective = require("lib.perspective.perspective")
-local scene = composer.newScene()
-local player = require("player")
 local obstacle = require("obstacle")
-local widget = require("widget")
+local player = require("player")
+local scene = composer.newScene()
 local musicTrack
 local numOfLives = 3
+
+local camera, world
 local cameraDestroyed = nil
 local playerChar
+local player_velocity_scale = 150
+local boulder, checkBoulder
 
 physics.start()
 physics.setGravity(0, 0)
@@ -22,12 +25,6 @@ else
 	playerChar.sprite.y = 450
 end
 playerChar:spawn()
-
-local boulder, checkBoulder
-
-local camera, world
-local player_velocity_scale = 150
-local worldTable = {}
 
 local function updateSavedGame()
 	local path = system.pathForFile("save.csv", system.DocumentsDirectory)
@@ -163,16 +160,15 @@ function scene:create(event)
 	 boulder = obstacle:new({ img = sheet, imgIdx = 1, outline = graphics.newOutline(2, sheet, 1),
 	x = 220, y = 322 })
 	boulder:spawn()
-	world:insert(boulder.sprite)
 	
-
+	
 	local boulderGoalOptions = {
 		frames = {
 			{ x = 0, y = 0,
 			width = 28, height = 24 }
 		}
 	}
-
+	
 	local boulderGoalSheet = graphics.newImageSheet("images/boulderGoal.png", boulderGoalOptions)
 	
 	local boulderGoal = display.newImage(boulderGoalSheet, 1);
@@ -182,6 +178,8 @@ function scene:create(event)
 	boulderGoal.y = 322
 	
 	physics.addBody(boulderGoal, "dynamic", { outline = boulderGoalOutline });
+	world:insert(boulderGoal)
+	world:insert(boulder.sprite)
 	
 	local circle1 = display.newCircle(display.contentCenterX + 50, display.contentCenterY - 50, 30)
 	circle1:setFillColor(1, 0, 0)
@@ -210,7 +208,11 @@ function scene:create(event)
 				}
 			}
 			circle1:removeEventListener("collision", circleCollision)
-			camera:destroy()
+			if not cameraDestroyed then
+				camera:destroy()
+				camera = nil
+				cameraDestroyed = true
+			end
 			playerChar.movementEnabled = false
 			timer.cancelAll()
 			composer.showOverlay("battleScene", overlayOptions)
@@ -266,8 +268,6 @@ function scene:create(event)
 	
 	world:insert(squirtleSprite)
 
-	sceneGroup:insert(boulderGoal)
-	world:insert(boulderGoal)
 	
 	
 	local entrance = display.newRect(display.contentCenterX, 485, 100, 20)
@@ -324,6 +324,8 @@ local function setupCamera(playerChar, world)
 	camera.damping = 10 -- A bit more fluid tracking
 	camera:setFocus(playerChar.sprite) -- Set the focus to the player
 	-- print("Layers: " .. camera:layerCount())	-- #DEBUG
+	
+	cameraDestroyed = nil
 end
 
 function scene:show(event)
@@ -357,6 +359,7 @@ function scene:hide(event)
 		audio.stop(1)
 		playerChar.movementEnabled = false
 		Runtime:removeEventListener("touch", movePlayer)
+		audio.stop(1)
 		timer.cancelAll()
 		updateSavedGame()
 
@@ -368,8 +371,11 @@ end
 
 function scene:destroy(event)
 
-	camera:destroy()
-	camera = nil
+	if not cameraDestroyed then
+		camera:destroy()
+		camera = nil
+		cameraDestroyed = true
+	end
 	composer.removeScene("scene5", false)
 
 	local sceneGroup = self.view

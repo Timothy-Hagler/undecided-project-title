@@ -1,12 +1,15 @@
 -- Scene Composer for cave route (level 2)
 local composer = require("composer")
 local perspective = require("lib.perspective.perspective")
-local widget = require("widget")
-local scene = composer.newScene()
 local player = require("player")
+local scene = composer.newScene()
 local musicTrack
 local numOfLives = 3
+
+local camera, world
+local cameraDestroyed = nil
 local playerChar
+local player_velocity_scale = 150
 
 physics.start()
 physics.setGravity(0, 0)
@@ -21,9 +24,6 @@ else
 end
 playerChar:spawn()
 
-local camera, world
-local player_velocity_scale = 150
-local worldTable = {}
 
 local function updateSavedGame()
 	local path = system.pathForFile("save.csv", system.DocumentsDirectory)
@@ -90,7 +90,11 @@ function scene:create(event)
 			}
 			playerChar.movementEnabled = false
 			circle1:removeEventListener("collision", circleCollision)
-			camera:destroy()
+			if not cameraDestroyed then
+				camera:destroy()
+				camera = nil
+				cameraDestroyed = true
+			end
 			composer.showOverlay("battleScene", overlayOptions)
 			-- timer.cancelAll()
 		end
@@ -206,6 +210,8 @@ local function setupCamera(playerChar, world)
 
 	camera.damping = 10 -- A bit more fluid tracking
 	camera:setFocus(playerChar.sprite) -- Set the focus to the player
+
+	cameraDestroyed = nil
 end
 
 function scene:show(event)
@@ -235,6 +241,7 @@ function scene:hide(event)
 		playerChar.movementEnabled = false
 		Runtime:removeEventListener("touch", movePlayer)
 		audio.stop(1)
+		timer.cancelAll()
 		updateSavedGame()
 
 	elseif (phase == "did") then
@@ -246,8 +253,11 @@ end
 function scene:destroy(event)
 	local sceneGroup = self.view
 
-	camera:destroy()
-	camera = nil
+	if not cameraDestroyed then
+		camera:destroy()
+		camera = nil
+		cameraDestroyed = true
+	end
 	composer.removeScene("scene6", false)
 
 	-- Called prior to the removal of scene's view ("sceneGroup").
