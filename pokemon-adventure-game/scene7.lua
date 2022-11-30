@@ -52,14 +52,14 @@ function scene:create( event )
 
    local obstacleFull = "images/gymObstacle.png"
    local obstaclesOutline = graphics.newOutline(2, obstacleFull)
-   local obstacle = display.newImage(obstacleFull)
+   local obstacle1 = display.newImage(obstacleFull)
    obstaclesOutline.alpha = 0
    
-   obstacle.x = background.x
-   obstacle.y = background.y
+   obstacle1.x = background.x
+   obstacle1.y = background.y
 
-   physics.addBody(obstacle, "static", {outline = obstaclesOutline, density=500})
-    world:insert(obstacle)
+   physics.addBody(obstacle1, "static", {outline = obstaclesOutline, density=500})
+    world:insert(obstacle1)
 
     local obstacleFull2 = "images/gymObstacle2.png"
     local obstaclesOutline2 = graphics.newOutline(2, obstacleFull2)
@@ -137,6 +137,82 @@ function scene:create( event )
         physics.addBody(obstacle7, "static", {outline = obstaclesOutline7, density=500})
          world:insert(obstacle7)
 
+         local ledgeFull = "images/gymLedge.png"
+         local ledgeOutline = graphics.newOutline(2, ledgeFull)
+         local ledge = display.newImage(ledgeFull)
+         
+         
+         ledge.x = background.x
+         ledge.y = background.y
+      
+         physics.addBody(ledge, "static", {outline = ledgeOutline, density=500})
+          world:insert(ledge)
+
+          local ledgeFull2 = "images/gymLedge2.png"
+          local ledgeOutline2 = graphics.newOutline(2, ledgeFull2)
+          local ledge2 = display.newImage(ledgeFull2)
+          
+          
+          ledge2.x = background.x
+          ledge2.y = background.y
+       
+          physics.addBody(ledge2, "static", {outline = ledgeOutline2, density=500})
+           world:insert(ledge2)
+
+           local ledgeFull3 = "images/gymLedge3.png"
+           local ledgeOutline3 = graphics.newOutline(2, ledgeFull3)
+           local ledge3 = display.newImage(ledgeFull3)
+           
+           
+           ledge3.x = background.x
+           ledge3.y = background.y
+        
+           physics.addBody(ledge3, "static", {outline = ledgeOutline3, density=500})
+            world:insert(ledge3)
+
+            local ledgeFull4 = "images/gymLedge4.png"
+            local ledgeOutline4 = graphics.newOutline(2, ledgeFull4)
+            local ledge4 = display.newImage(ledgeFull4)
+            
+            
+            ledge4.x = background.x
+            ledge4.y = background.y
+         
+            physics.addBody(ledge4, "static", {outline = ledgeOutline4, density=500})
+             world:insert(ledge4)
+
+             local ledgeFull5 = "images/gymLedge5.png"
+             local ledgeOutline5 = graphics.newOutline(2, ledgeFull5)
+             local ledge5 = display.newImage(ledgeFull5)
+             
+             
+             ledge5.x = background.x
+             ledge5.y = background.y
+          
+             physics.addBody(ledge5, "static", {outline = ledgeOutline5, density=500})
+              world:insert(ledge5)
+
+              local ledgeFull6 = "images/gymLedge6.png"
+              local ledgeOutline6 = graphics.newOutline(2, ledgeFull6)
+              local ledge6 = display.newImage(ledgeFull6)
+              
+              
+              ledge6.x = background.x
+              ledge6.y = background.y
+           
+              physics.addBody(ledge6, "static", {outline = ledgeOutline6, density=500})
+               world:insert(ledge6)
+
+               local ledgeFull7 = "images/gymLedge7.png"
+               local ledgeOutline7 = graphics.newOutline(2, ledgeFull7)
+               local ledge7 = display.newImage(ledgeFull7)
+               
+               
+               ledge7.x = background.x
+               ledge7.y = background.y
+            
+               physics.addBody(ledge7, "static", {outline = ledgeOutline7, density=500})
+                world:insert(ledge7)
 
     local bulbOptions =
     {
@@ -172,19 +248,35 @@ function scene:create( event )
    sceneGroup:insert(playerChar.sprite)
    
 
- --[[  local boulderOptions = {
+   local boulderOptions = {
     frames = {
     {x = 0, y = 0, 
     width = 27, height = 28}
     }
  }
-  local boulderSheet = graphics.newImageSheet('images/boulder.png', boulderOptions)
-  local boulderOutline = graphics.newOutline(2, boulderSheet, 1)
-  local boulder = obstacle:new({ img=boulderSheet, imgIdx=1, outline=boulderOutline, x=200, y=322 })
-  boulder:spawn()
-  world:insert(boulder.sprite) ]]--
+ local boulderSheet = graphics.newImageSheet("images/boulder.png", boulderOptions)
+ local boulderOutline = graphics.newOutline(2, boulderSheet, 1)
+ local boulder = obstacle:new({ img=boulderSheet, imgIdx=1, outline=boulderOutline, -270, 489 })
+ local boulder2 = obstacle:new({ img=boulderSheet, imgIdx=1, outline=boulderOutline, -270, 489 })
+ local boulder3 = obstacle:new({ img=boulderSheet, imgIdx=1, outline=boulderOutline, -270, 489 })
+ local boulder4 = obstacle:new({ img=boulderSheet, imgIdx=1, outline=boulderOutline, -270, 489 })
+ boulder:spawn()
+ boulder2:spawn()
+ boulder3:spawn()
+ boulder4:spawn()
+ world:insert(boulder.sprite)
+    boulder.sprite.x = -140
+    boulder.sprite.y = 169
+    world:insert(boulder2.sprite)
+    boulder2.sprite.x = 164
+    boulder2.sprite.y = 104
+    world:insert(boulder3.sprite)
+    boulder3.sprite.x = 370
+    boulder3.sprite.y = 126
+    world:insert(boulder4.sprite)
+    boulder4.sprite.x = 154
+    boulder4.sprite.y = -163
 
-  sceneGroup:insert(world)
 
    musicTrack = audio.loadStream( "audio/gymMusic.mp3")
 
@@ -218,7 +310,8 @@ function scene:create( event )
       transition.cancel( event.target )
 
       if ( event.phase == "began" ) then
-         print("hit")
+         print("hit at " .. playerChar.sprite.x .. " " .. playerChar.sprite.y)
+
       elseif ( event.phase == "ended" ) then
          print("no longer hit")
       end
