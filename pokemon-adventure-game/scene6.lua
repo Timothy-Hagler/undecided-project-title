@@ -5,15 +5,17 @@ local widget = require("widget")
 local scene = composer.newScene()
 local player = require("player")
 local musicTrack
+local numOfLives = 3
+
  
 physics.start()
 physics.setGravity(0,0)
-physics.setDrawMode("hybrid")
 local camera, world
 if playerChar == nil then
-   playerChar = player:new({x=display.contentCenterX, y=display.contentCenterY, inWater=true})
+   playerChar = player:new({x=display.contentCenterX, y=display.contentCenterY, inWater=true, tag = "player"})
 else
    playerChar.inWater = true
+   playerChar.y = display.contentCenterY
 end
 playerChar:spawn()
 local player_velocity_scale = 150
@@ -35,15 +37,53 @@ function scene:create( event )
 	world = display.newGroup()
 
 
-   local function goToNextScene()
 
-      local options = {
+
+
+   
+   -- add random pokemon enemy generator
+   -- create a sprite object and then do a physics.addBody on int1Sheet
+   -- make the enemy a kinematic object that randomy attacks and defends
+   -- grab the movement from the scene5 and add it in the overlay scene
+
+   -- put the sprites onto the screen
+
+   -- put the trainer and pikachu in a group and then put the enemies in a group
+
+   -- 1 add phyiscs bodies and outlines to the sprites
+
+
+
+local circle1 = display.newCircle(display.contentCenterX + 610,display.contentCenterY - 390,100)
+--local circle1 = display.newCircle(display.contentCenterX,display.contentCenterY,100)
+circle1.alpha = 0
+-- hide the circle
+physics.addBody(circle1, "static", {radius = 100})
+circle1.isSensor = true
+
+
+
+-- add collision event
+local function circleCollision (event)
+   if(event.phase == "began") then
+      local overlayOptions = { -- options for scene overlay
          effect = "fade",
-         time = 500
+         time = 500,
+         isModal = true,
+         params = {
+            nextScene = "scene8",
+            currScene = "scene1",
+            pokemon = "charmander"
+         }
       }
+      circle1:removeEventListener("collision", circleCollision)
+      composer.showOverlay("battleScene", overlayOptions)
 		timer.cancelAll()
-      composer.gotoScene("scene7", options)
    end
+end
+
+circle1:addEventListener("collision", circleCollision)
+-- call the battle scene overlay here if the radius is encountered at a certain x and y positions
 
    local backgroundWater = display.newImage("images/map3smallwater.png")
    backgroundWater.x = display.contentCenterX
@@ -131,7 +171,7 @@ function scene:create( event )
         obstacle6.y = background.y
      
         physics.addBody(obstacle6, "static", {outline = obstaclesOutline6, density=500})
-         world:insert(obstacle6)
+        world:insert(obstacle6)
 
 
    sceneGroup:insert(playerChar.sprite)
@@ -182,6 +222,7 @@ function scene:create( event )
 
    timer.performWithDelay(0,updatePlayerRotation,-1)
    updateSavedGame()
+   world:insert(circle1)
    --Runtime:addEventListener("collision", onGlobalCollision)	-- global collision
 end
 
@@ -208,9 +249,9 @@ function scene:show( event )
    elseif ( phase == "did" ) then
       -- Called when the scene is now on screen.
       -- Insert code here to make the scene come alive.
-      -- Example: start timers, begin animation, play audio, etc.
+      -- Example: start tieers, begin animation, play audio, etc.
 		camera:track() -- Begin auto-tracking
-      audio.play( musicTrack, { channel=1, loops=-1 } )
+     -- audio.play( musicTrack, { channel=1, loops=-1 } )
 
    end
 end
@@ -227,7 +268,7 @@ function scene:hide( event )
 
    elseif ( phase == "did" ) then
       -- Called immediately after scene goes off screen.
-		camera:destroy()
+		--camera:destroy()
       composer.removeScene("scene6", false)
    end
 end
