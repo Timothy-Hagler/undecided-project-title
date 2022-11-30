@@ -15,7 +15,7 @@ local enemy, playerChar, background
  
 local function playerDeath()
 
-   if(numOfLives == 0) then
+ 
       local options = {
          effect = "fade",
          time = 500
@@ -23,7 +23,7 @@ local function playerDeath()
 
    composer.gotoScene("mainmenu", options) -- gameover if all lives lost
 
-   end
+   
 end
 
 -- "scene:create()"
@@ -154,6 +154,10 @@ local function handleAttackButtonEvent( event )
    end -- end if
    -- check for health status
    if(playerHealthBar:getProgress()  <= 0) then -- if player dies, decrement lives
+      numOfLives = numOfLives - 1
+      if(numOfLives == 0) then
+         playerDeath()
+      end
       composer.hideOverlay("battleScene", 400)
       parent:goToPreviousScene() -- uses parent function in scene 5
       -- and restart the scene
@@ -176,6 +180,7 @@ local function handleDefendButtonEvent( event )
    end -- end if
 -- check for health status
    if(playerHealthBar:getProgress() <= 0) then -- if player dies, decrement lives
+      numOfLives = numOfLives - 1
       composer.hideOverlay("battleScene", 400)
       -- and restart the scene
       parent:goToPreviousScene() -- uses parent function in scene 5
@@ -202,7 +207,9 @@ local attackButton = widget.newButton(
       label = "ATTACK",
       width = 100,
       cornerRadius = 9,
+      strokeColor = {default={1,0,0,0}, over={0.8,0.8,1,1}},
       fillColor = {default={1,0,0,1}, over={1,1,1,1}},
+      strokeWidth = 4,
       onEvent = handleAttackButtonEvent
    }
 )
@@ -216,7 +223,9 @@ local defendButton = widget.newButton(
       label = "DEFEND",
       width = 100,
       cornerRadius = 9,
+      strokeColor = {default={1,0,0,0}, over={0.8,0.8,1,1}},
       fillColor = {default={0,0,1,1}, over={1,1,1,1}},
+      strokeWidth = 4,
       onEvent = handleDefendButtonEvent
    }
 )
