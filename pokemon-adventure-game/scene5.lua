@@ -15,7 +15,6 @@ local boulder, checkBoulder
 
 physics.start()
 physics.setGravity(0, 0)
--- physics.setDrawMode("hybrid") -- #FIXME
 
 if playerChar == nil then
 	playerChar = player:new({ x = display.contentCenterX, y = 450, inWater = false })
@@ -192,10 +191,7 @@ function scene:create(event)
 	-- add collision event
 	local function circleCollision(event)
 		if (event.phase == "began") then
-			-- print("CIRCLE1")		-- #DEBUG
-			-- print(event.other)
-			-- print(playerChar)
-
+			
 			local overlayOptions = { -- options for scene overlay
 			effect = "fade",
 			time = 500,

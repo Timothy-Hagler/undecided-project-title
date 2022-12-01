@@ -50,8 +50,6 @@ end
 
 function belowCollisionOnly( self, event)
 	if ( event.y > 4 and event.y < 100 ) then	 -- self.y > other.y --> colliding below object --> ignore collision. <100 added to avoid bugs
-		-- print(event.target.pp.tag)	-- #DEBUG
-		-- print(event.x..", "..event.y)
 		if not event.other.transitioning then
 			event.contact.isEnabled = false
 			event.other.IsBodyActive = false -- disable for tranition

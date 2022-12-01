@@ -4,7 +4,7 @@ local csv = require("csv")
 local scene = composer.newScene()
 local musicTrack
 
-local debug = true	-- #DEBUG
+local debug = true	-- #DEBUG	-- 
 local widget 	-- #DEBUG
 if debug then widget = require("widget") end
 

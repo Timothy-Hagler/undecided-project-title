@@ -14,7 +14,6 @@ local player_velocity_scale = 150
 
 physics.start()
 physics.setGravity(0, 0)
--- physics.setDrawMode("hybrid") -- #FIXME
 
 if playerChar == nil then
 	playerChar = player:new({ x = display.contentCenterX, y = display.contentCenterY, inWater = false, tag = "player" })

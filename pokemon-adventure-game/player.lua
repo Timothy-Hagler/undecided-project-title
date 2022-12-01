@@ -98,9 +98,8 @@ function Player:move(xvel, yvel, phase)
 		if (phase == "began" or (self.sprite.prevSequence ~= self.sprite.seq)) then
 			self.sprite:setSequence(self.sprite.seq)
 			self.sprite:play()
-			-- print(self.sprite.seq)	-- #FIXME
 		end
-		self.sprite:setLinearVelocity(xvel, yvel) -- #TODO: changing this to impulse-based motion would work better for boulder collision, but this will work ok as-is
+		self.sprite:setLinearVelocity(xvel, yvel)
 		self.sprite.linearDamping = 0
 	end
 end

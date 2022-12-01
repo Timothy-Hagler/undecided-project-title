@@ -42,7 +42,7 @@ function scene:show( event )
  
    if ( phase == "will" ) then
       -- Called when the scene is still off screen (but is about to come on screen).
-
+		composer.removeHidden(false);
    elseif ( phase == "did" ) then
       -- Called when the scene is now on screen.
       -- Insert code here to make the scene come alive.
